@@ -1,0 +1,147 @@
+{
+  "experiment_id": "experiment_12",
+  "title": "Coherent Phase Control at Different Temperatures",
+  "data_type": "raw",
+  "description": "Raw BCTDS homodyne I/Q measurements of a two-pulse phase coherent-control protocol on a sapphire sample with spin-coated Shipley 1813 photoresist, repeated at seven fridge temperatures from 8 to 750 mK. Raising the temperature weakens phase sensitivity and destroys coherent control, so the phase contrast collapses as T increases. Only the in-phase (I) and quadrature (Q) signals are measured; magnitude, phase, and FFT spectra are computable from them and are not stored.",
+  "samples": [
+    {
+      "sample_id": 0,
+      "name": "Shipley",
+      "material": "Sapphire substrate with spin-coated Shipley 1813 photoresist"
+    }
+  ],
+  "apparatus": {
+    "refrigerator": "Bluefors LD400 dilution refrigerator",
+    "temperature_control": "The MXC heater is adjusted to set the sample temperature to 8, 95, 200, 307, 400, 600 and 750 mK. At each set point the system is allowed to thermalise for >1 hour before data acquisition.",
+    "waveguide": "WR-229 rectangular waveguide, 3-6 GHz passband, TE10 mode",
+    "detection": "homodyne (in-phase I, quadrature Q)",
+    "electronics": "RFSoC"
+  },
+  "clocks": {
+    "awg_clock_MHz": 9830.4,
+    "adc_readout_clock_MHz": 552.96
+  },
+  "timing": {
+    "pulse_duration": {
+      "hardware_unit": "AWG clock ticks",
+      "clock_MHz": 9830.4,
+      "formula": "pulse_width_ns = ticks / 9830.4 * 1000",
+      "fixed_ticks": 308,
+      "resulting_ns": 31.331380208333336
+    },
+    "time_axis": {
+      "hardware_unit": "ADC samples",
+      "clock_MHz": 552.96,
+      "one_sample_ns": 1.808449074074074,
+      "formula": "timestamp_ns = sample_index / 552.96 * 1000",
+      "n_samples": 1000,
+      "resulting_range_ns": [
+        0.0,
+        1806.6406249999998
+      ]
+    }
+  },
+  "pulse_geometry": {
+    "frame": "raw-trace samples/ns, the same frame as timestamp_ns",
+    "num_pulses": 2,
+    "pulse2_envelope_samples": [
+      442,
+      461
+    ],
+    "pulse2_start_ns": 799.3,
+    "pulse2_end_ns": 833.7,
+    "pulse2_is_anchored": true,
+    "source": "Measured from the pulse envelope in the raw data (threshold at 30% of peak magnitude): samples 442 -> 461. Identical at 8 mK and 750 mK, and identical to experiment 5's positions \u2014 the same rig and the same campaign.",
+    "note": "The second pulse is fixed in time for every spacing; the first pulse moves earlier as the delay grows, so timestamp_ns is directly comparable across spacings and temperatures."
+  },
+  "sweep": {
+    "sample": {
+      "n": 1,
+      "values": [
+        "Shipley"
+      ]
+    },
+    "temperature": {
+      "n": 7,
+      "unit": "mK",
+      "values": [
+        8,
+        95,
+        200,
+        307,
+        400,
+        600,
+        750
+      ],
+      "note": "The primary variable of Experiment 12. Each temperature is a separate acquisition run with its own ID and start time."
+    },
+    "drive_frequency": {
+      "n": 2,
+      "unit": "MHz",
+      "values": [
+        3400,
+        3560
+      ]
+    },
+    "inter_pulse_spacing": {
+      "n": 9,
+      "unit": "ns",
+      "values": [
+        10,
+        30,
+        50,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600
+      ]
+    },
+    "pulse_phase": {
+      "n": 121,
+      "unit": "deg",
+      "range": [
+        0,
+        360
+      ],
+      "step": 3,
+      "note": "Read from pulse_phase_array in each .npz, not assumed. 0 and 360 deg are the same physical point, acquired independently."
+    },
+    "time_samples_per_trace": 1000
+  },
+  "constant_drive_parameters": {
+    "pulse_width_ns": 31.331380208333336,
+    "pulse_width_ticks": 308,
+    "num_pulses": 2,
+    "pulse_shape": "square",
+    "pulse1_amplitude_au": null,
+    "pulse2_amplitude_au": null,
+    "amplitude_note": "The drive amplitudes are recorded nowhere: not in the filenames, not in the .npz contents. Experiment 4 used 30000 a.u. (first pulse) and 10000 a.u. (second); that is NOT asserted here."
+  },
+  "overlap_with_other_experiments": {
+    "experiment_5": "The 9 files at 8 mK / 3400 MHz are byte-identical to the whole of experiment 5 (verified by hash). Experiment 5 is the 8 mK / 3400 MHz slice of this campaign, sharing the run ID 'Shipley_phase_8mK_20251012_132853'. Both are released separately so each dataset stands alone."
+  },
+  "acquisition": {
+    "campaign_start_utc": "2025-10-12T13:28:57",
+    "run_starts_utc": {
+      "8": "2025-10-12T13:28:57",
+      "95": "2025-10-12T22:17:13",
+      "200": "2025-10-13T13:05:33",
+      "307": "2025-10-13T21:29:50",
+      "400": "2025-10-14T12:49:22",
+      "600": "2025-10-14T22:00:15",
+      "750": "2025-10-15T11:08:33"
+    },
+    "run_ids": {
+      "8": "Shipley_phase_8mK_20251012_132853",
+      "95": "Shipley_phase_95mK_20251012_221708",
+      "200": "Shipley_phase_200mK_20251013_130527",
+      "307": "Shipley_phase_307mK_20251013_212945",
+      "400": "Shipley_phase_400mK_20251014_124917",
+      "600": "Shipley_phase_600mK_20251014_220010",
+      "750": "Shipley_phase_750mK_20251015_110827"
+    },
+    "elapsed_s_note": "elapsed_s is wall-clock seconds since campaign_start_utc (the earliest timestamp across all files, i.e. the start of the 8 mK run), taken from the time_stamp_list array inside each .npz. The campaign spans about three days. To get seconds within a single temperature's run, subtract that run's start from acquisition.run_starts_utc. Stored as elapsed seconds rather than an absolute epoch because float32 cannot represent Unix timestamps to better than ~128 s; elapsed integer seconds up to 16.7 M are exact."
+  }
+}

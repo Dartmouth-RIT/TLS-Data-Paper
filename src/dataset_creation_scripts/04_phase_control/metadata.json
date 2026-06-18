@@ -1,0 +1,119 @@
+{
+  "experiment_id": "experiment_4",
+  "title": "Phase Control (Two-Pulse Coherent Control)",
+  "data_type": "raw",
+  "description": "Raw BCTDS homodyne I/Q measurements of a two-pulse coherent-control protocol on TLS defect ensembles, measured on three different samples. The phase of the first pulse is swept through a full turn while the inter-pulse spacing is varied, probing phase-controlled memory effects between the two pulses. Only the in-phase (I) and quadrature (Q) signals are measured; magnitude, phase, and FFT spectra are computable from them and are not stored.",
+  "samples": [
+    {
+      "sample_id": 0,
+      "name": "AlOx",
+      "material": "Sapphire substrate with 2 nm ALD AlOx layer",
+      "drive_frequency_MHz": 3657
+    },
+    {
+      "sample_id": 1,
+      "name": "111_oxide",
+      "material": "Silicon (111), native SiOx surface layer",
+      "drive_frequency_MHz": 4254
+    },
+    {
+      "sample_id": 2,
+      "name": "silicon",
+      "material": "Silicon with silicon oxide",
+      "drive_frequency_MHz": 4424
+    }
+  ],
+  "apparatus": {
+    "refrigerator": "Bluefors LD400 dilution refrigerator",
+    "temperature": "< 10 mK",
+    "waveguide": "WR-229 rectangular waveguide, 3-6 GHz passband, TE10 mode",
+    "detection": "homodyne (in-phase I, quadrature Q)",
+    "electronics": "RFSoC"
+  },
+  "clocks": {
+    "awg_clock_MHz": 9830.4,
+    "adc_readout_clock_MHz": 552.96
+  },
+  "timing": {
+    "note": "The instrument specifies and records time in integer hardware clock cycles, converted to nanoseconds using the relevant clock rate. Pulse duration and amplitude are fixed for this experiment; the first pulse's phase is the primary swept variable.",
+    "pulse_duration": {
+      "hardware_unit": "AWG clock ticks",
+      "clock_MHz": 9830.4,
+      "one_tick_ns": 0.10172526041666667,
+      "formula": "pulse_width_ns = ticks / 9830.4 * 1000",
+      "fixed_ticks": 308,
+      "resulting_ns": 31.331380208333336
+    },
+    "time_axis": {
+      "hardware_unit": "ADC samples",
+      "clock_MHz": 552.96,
+      "one_sample_ns": 1.808449074074074,
+      "formula": "timestamp_ns = sample_index / 552.96 * 1000",
+      "n_samples": 1000,
+      "resulting_range_ns": [
+        0.0,
+        1806.6406249999998
+      ]
+    }
+  },
+  "pulse_geometry": {
+    "frame": "raw-trace nanoseconds, i.e. the same frame as the timestamp_ns column, measured from the start of the recorded window.",
+    "pulse2_start_ns": 186.6,
+    "pulse2_end_ns": 217.92,
+    "pulse2_is_anchored": true,
+    "pulse1_start_ns_by_spacing_ns": {
+      "0": 154.36,
+      "10": 144.36,
+      "20": 134.36,
+      "30": 124.36,
+      "40": 114.36,
+      "50": 104.36
+    },
+    "note": "The second pulse is fixed in time for every spacing; the first pulse moves earlier as the spacing grows. The post-pulse ring-down therefore begins at the same absolute time in every file, so timestamp_ns is directly comparable across spacings.",
+    "source": "Measured from the pulse envelope in the raw data (threshold at 30% of peak magnitude): samples 104 -> 121."
+  },
+  "sweep": {
+    "sample": {
+      "n": 3,
+      "values": [
+        "AlOx",
+        "111_oxide",
+        "silicon"
+      ]
+    },
+    "inter_pulse_spacing": {
+      "n": 6,
+      "unit": "ns",
+      "values": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50
+      ]
+    },
+    "pulse_phase": {
+      "n": 121,
+      "unit": "deg",
+      "range": [
+        0,
+        360
+      ],
+      "step": 3,
+      "note": "np.arange(0, 361, 3). 0 and 360 deg are the same physical point, acquired independently: 120 unique phases plus one repeat."
+    },
+    "time_samples_per_trace": 1000
+  },
+  "constant_drive_parameters": {
+    "pulse_width_ns": 31.331380208333336,
+    "pulse_width_ticks": 308,
+    "num_pulses": 2,
+    "pulse_shape": "square",
+    "pulse1_amplitude_au": 30000,
+    "pulse2_amplitude_au": 10000,
+    "amplitude_ratio": 3,
+    "pulse2_phase": "fixed; absolute value not recorded",
+    "amplitude_note": "The drive amplitudes are recorded nowhere in the raw files \u2014 neither in the filenames nor in the arrays."
+  }
+}

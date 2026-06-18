@@ -1,0 +1,114 @@
+{
+  "dataset": "experiment_3_amplitude_control",
+  "format": "long (one row per time sample)",
+  "n_rows": 1800000,
+  "n_columns": 7,
+  "schema_rule": "The filename holds everything constant within a file (sample, pulse width, frequency, spacing); the array axes hold everything that varies (amplitude, time) together with the measured I/Q.",
+  "columns": [
+    {
+      "name": "sample_id",
+      "dtype": "float32",
+      "unit": "categorical index",
+      "role": "coordinate (categorical)",
+      "measured": false,
+      "varies_within_file": false,
+      "computed_from": "filename token 1; see sample_names in the pickle",
+      "values": {
+        "0": "AlOx",
+        "1": "111_oxide",
+        "2": "silicon"
+      },
+      "n_unique": 3,
+      "description": "Which sample the measurement was taken on. 0 = AlOx (sapphire + 2 nm ALD AlOx), 1 = 111_oxide (Si(111) native oxide), 2 = silicon (silicon + silicon oxide)."
+    },
+    {
+      "name": "frequency_MHz",
+      "dtype": "float32",
+      "unit": "MHz",
+      "role": "coordinate (fixed per sample)",
+      "measured": false,
+      "varies_within_file": false,
+      "computed_from": "filename field 'freq_XXXX'",
+      "values": {
+        "AlOx": 3657,
+        "111_oxide": 4254,
+        "silicon": 4424
+      },
+      "n_unique": 3,
+      "description": "Drive frequency, held fixed for each sample at a strong ring-down resonance. Both pulses fire at this frequency."
+    },
+    {
+      "name": "spacing_ns",
+      "dtype": "float32",
+      "unit": "ns",
+      "role": "coordinate (swept input)",
+      "measured": false,
+      "varies_within_file": false,
+      "computed_from": "filename field 'spacing_X' (microseconds) x 1000",
+      "values": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50
+      ],
+      "n_unique": 6,
+      "description": "Inter-pulse spacing: the gap between the end of the first drive pulse and the start of the second. Stored in nanoseconds rather than the filenames' microseconds so that the values are exactly representable in float32. At spacing = 0 the two pulses are contiguous, forming one double-length pulse."
+    },
+    {
+      "name": "amplitude_arb",
+      "dtype": "float32",
+      "unit": "arb",
+      "role": "coordinate (primary swept input)",
+      "measured": false,
+      "varies_within_file": true,
+      "computed_from": "np.arange(0, 30000, 300); axis 1 of the raw .npy",
+      "range": [
+        0,
+        29700
+      ],
+      "n_unique": 100,
+      "description": "Amplitude of the FIRST drive pulse \u2014 the primary swept variable (100 values, 0 to 29700, step 300). At 0 there is effectively no first pulse, which serves as the baseline. The second pulse is held at a fixed ~10000 a.u. reference throughout. Whole numbers, so == filtering is exact and safe."
+    },
+    {
+      "name": "timestamp_ns",
+      "dtype": "float32",
+      "unit": "ns",
+      "role": "coordinate (time axis)",
+      "measured": false,
+      "varies_within_file": true,
+      "computed_from": "ADC sample index -> ns:  timestamp_ns = sample_index / 552.96 * 1000",
+      "range": [
+        0.0,
+        1806.6406249999998
+      ],
+      "n_unique": 1000,
+      "description": "Time of the sample within the recorded trace, measured from t = 0 (start of the recorded window). Sample spacing = 1.8084 ns, set by the 552.96 MHz readout clock. All 1000 samples are kept; the trace is never trimmed."
+    },
+    {
+      "name": "I",
+      "dtype": "float32",
+      "unit": "ADC arbitrary units",
+      "role": "measured observable (raw)",
+      "measured": true,
+      "varies_within_file": true,
+      "computed_from": "IQ_matrix[0] - loaded directly from the raw .npy",
+      "description": "Raw in-phase homodyne signal, exactly as acquired (averaged over shots). Note this is the measured signal, distinct from the swept drive amplitude in amplitude_arb."
+    },
+    {
+      "name": "Q",
+      "dtype": "float32",
+      "unit": "ADC arbitrary units",
+      "role": "measured observable (raw)",
+      "measured": true,
+      "varies_within_file": true,
+      "computed_from": "IQ_matrix[1] - loaded directly from the raw .npy",
+      "description": "Raw quadrature homodyne signal, exactly as acquired (averaged over shots). Combined with I to compute magnitude and phase."
+    }
+  ],
+  "computable_not_stored": {
+    "magnitude": "sqrt(I^2 + Q^2)  ==  abs(I + 1j*Q)",
+    "phase": "atan2(Q, I)  ==  angle(I + 1j*Q)"
+  }
+}

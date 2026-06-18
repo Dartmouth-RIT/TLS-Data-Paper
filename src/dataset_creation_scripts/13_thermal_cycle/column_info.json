@@ -1,0 +1,78 @@
+{
+  "dataset": "experiment_13_thermal_cycle",
+  "format": "long (one row per time sample)",
+  "n_rows": 6000000,
+  "n_columns": 5,
+  "schema_rule": "The filename holds the sample and the cooldown; the array axes hold the drive frequency (axis 1) and time (axis 2) together with the measured I/Q. Unlike the other experiments, the frequency axis is not stored in the file \u2014 it comes from generate_fig_13.py.",
+  "columns": [
+    {
+      "name": "cooldown_index",
+      "dtype": "float32",
+      "unit": "categorical index",
+      "role": "coordinate (primary categorical variable)",
+      "measured": false,
+      "varies_within_file": false,
+      "computed_from": "filename prefix: 'shipley' -> 1, 'shipley_2nd' -> 2",
+      "values": {
+        "1": "before thermal cycling",
+        "2": "after thermal cycling"
+      },
+      "n_unique": 2,
+      "description": "Which cooldown the measurement belongs to \u2014 the variable this experiment compares. The two cooldowns are three days apart, with a thermal cycle to room temperature in between and no vacuum break or setup change."
+    },
+    {
+      "name": "frequency_MHz",
+      "dtype": "float32",
+      "unit": "MHz",
+      "role": "coordinate (primary swept input)",
+      "measured": false,
+      "varies_within_file": true,
+      "computed_from": "generate_fig_13.py: np.arange(2000, 5000, 1); axis 1",
+      "range": [
+        2000,
+        4999
+      ],
+      "n_unique": 3000,
+      "description": "Drive frequency, the primary swept variable: 3000 values from 2000 to 4999 MHz in 1 MHz steps. Each frequency gets its own single-pulse ring-down trace."
+    },
+    {
+      "name": "timestamp_ns",
+      "dtype": "float32",
+      "unit": "ns",
+      "role": "coordinate (time axis)",
+      "measured": false,
+      "varies_within_file": true,
+      "computed_from": "sample_index / 552.96 * 1000; axis 2",
+      "range": [
+        0.0,
+        1806.6406249999998
+      ],
+      "n_unique": 1000,
+      "description": "Time within the recorded trace, measured from t = 0 (start of the recorded window). The axis the ring-down physics lives on."
+    },
+    {
+      "name": "I",
+      "dtype": "float32",
+      "unit": "ADC arbitrary units",
+      "role": "measured observable (raw)",
+      "measured": true,
+      "varies_within_file": true,
+      "computed_from": "IQ_avg_matrix[0], loaded directly from the .npy",
+      "description": "Raw in-phase homodyne signal, averaged over shots."
+    },
+    {
+      "name": "Q",
+      "dtype": "float32",
+      "unit": "ADC arbitrary units",
+      "role": "measured observable (raw)",
+      "measured": true,
+      "varies_within_file": true,
+      "computed_from": "IQ_avg_matrix[1], loaded directly from the .npy",
+      "description": "Raw quadrature homodyne signal, averaged over shots. Combined with I to compute magnitude and phase."
+    }
+  ],
+  "computable_not_stored": {
+    "magnitude": "sqrt(I^2 + Q^2)  ==  abs(I + 1j*Q)",
+    "phase": "atan2(Q, I)  ==  angle(I + 1j*Q)"
+  }
+}

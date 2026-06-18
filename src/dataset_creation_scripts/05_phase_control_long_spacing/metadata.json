@@ -1,0 +1,123 @@
+{
+  "experiment_id": "experiment_5",
+  "title": "Phase Control at Long Inter-Pulse Spacing",
+  "data_type": "raw",
+  "description": "Raw BCTDS homodyne I/Q measurements of a two-pulse phase coherent-control protocol on a sapphire sample with spin-coated Shipley 1813 photoresist, driven at 3.4 GHz. The phase of the first pulse is swept through a full turn while the inter-pulse delay is varied from 10 to 600 ns, spanning the ~100 ns ring-down lifetime, to show how coherent control is lost as the delay exceeds the bath's memory. Only the in-phase (I) and quadrature (Q) signals are measured; magnitude, phase, and FFT spectra are computable from them and are not stored.",
+  "samples": [
+    {
+      "sample_id": 0,
+      "name": "Shipley",
+      "material": "Sapphire substrate with spin-coated Shipley 1813 photoresist",
+      "drive_frequency_MHz": 3400
+    }
+  ],
+  "apparatus": {
+    "refrigerator": "Bluefors LD400 dilution refrigerator",
+    "temperature": "8 mK (set point, from the filename)",
+    "waveguide": "WR-229 rectangular waveguide, 3-6 GHz passband, TE10 mode",
+    "detection": "homodyne (in-phase I, quadrature Q)",
+    "electronics": "RFSoC"
+  },
+  "clocks": {
+    "awg_clock_MHz": 9830.4,
+    "adc_readout_clock_MHz": 552.96
+  },
+  "timing": {
+    "pulse_duration": {
+      "hardware_unit": "AWG clock ticks",
+      "clock_MHz": 9830.4,
+      "formula": "pulse_width_ns = ticks / 9830.4 * 1000",
+      "fixed_ticks": 308,
+      "resulting_ns": 31.331380208333336
+    },
+    "time_axis": {
+      "hardware_unit": "ADC samples",
+      "clock_MHz": 552.96,
+      "one_sample_ns": 1.808449074074074,
+      "formula": "timestamp_ns = sample_index / 552.96 * 1000",
+      "n_samples": 1000,
+      "resulting_range_ns": [
+        0.0,
+        1806.6406249999998
+      ]
+    }
+  },
+  "pulse_geometry": {
+    "frame": "raw-trace nanoseconds, the same frame as timestamp_ns",
+    "pulse2_start_ns": 801.14,
+    "pulse2_end_ns": 831.87,
+    "pulse2_is_anchored": true,
+    "pulse1_start_ns_by_spacing_ns": {
+      "10": 759.81,
+      "30": 739.81,
+      "50": 719.81,
+      "100": 669.81,
+      "200": 569.81,
+      "300": 469.81,
+      "400": 369.81,
+      "500": 269.81,
+      "600": 169.81
+    },
+    "note": "The second pulse is fixed in time for every spacing; the first pulse moves earlier as the delay grows. The post-pulse ring-down therefore begins at the same absolute time in every file, so timestamp_ns is directly comparable across spacings.",
+    "source": "Measured from the pulse envelope in the raw data (threshold at 30% of peak magnitude): samples 442 -> 461."
+  },
+  "sweep": {
+    "sample": {
+      "n": 1,
+      "values": [
+        "Shipley"
+      ]
+    },
+    "drive_frequency": {
+      "n": 1,
+      "unit": "MHz",
+      "values": [
+        3400
+      ]
+    },
+    "inter_pulse_spacing": {
+      "n": 9,
+      "unit": "ns",
+      "values": [
+        10,
+        30,
+        50,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600
+      ],
+      "note": "The inter-pulse delay spans 10 to 600 ns, bracketing the ~100 ns ring-down lifetime."
+    },
+    "pulse_phase": {
+      "n": 121,
+      "unit": "deg",
+      "range": [
+        0,
+        360
+      ],
+      "step": 3,
+      "note": "Read from pulse_phase_array in each .npz, not assumed. 0 and 360 deg are the same physical point, acquired independently."
+    },
+    "time_samples_per_trace": 1000
+  },
+  "constant_drive_parameters": {
+    "pulse_width_ns": 31.331380208333336,
+    "pulse_width_ticks": 308,
+    "num_pulses": 2,
+    "pulse_shape": "square",
+    "pulse1_amplitude_au": null,
+    "pulse2_amplitude_au": null,
+    "amplitude_note": "This experiment uses the same two-pulse protocol as Experiment 4, but does not restate the drive amplitudes, and they appear in neither the filenames nor the .npz contents. Experiment 4 used 30000 a.u. (first pulse) and 10000 a.u. (second); that is NOT asserted here. Confirm with the team before relying on it."
+  },
+  "overlap_with_other_experiments": {
+    "experiment_12": "These 9 files are byte-identical to the 3400 MHz half of experiment 12's 8 mK folder (verified by hash). Experiment 5 is the 8 mK / 3400 MHz slice of the same acquisition campaign that produced Experiment 12 (shared run ID 'Shipley_phase_8mK_20251012_132853'). Both are released separately so each dataset stands alone."
+  },
+  "acquisition": {
+    "run_id": "Shipley_phase_8mK_20251012_132853",
+    "run_start_utc": "2025-10-12T13:28:57",
+    "elapsed_s_note": "elapsed_s is wall-clock seconds since run_start_utc, taken from the time_stamp_list array inside each .npz (one entry per phase point). Stored as elapsed seconds rather than an absolute epoch because float32 cannot represent Unix timestamps to better than ~128 s."
+  }
+}

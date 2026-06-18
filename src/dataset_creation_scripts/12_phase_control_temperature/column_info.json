@@ -1,0 +1,130 @@
+{
+  "dataset": "experiment_12_phase_control_temperature",
+  "format": "long (one row per time sample)",
+  "n_rows": 15246000,
+  "n_columns": 8,
+  "schema_rule": "The filename and its parent folder hold everything constant within a file (sample, pulse width, temperature, frequency, spacing); the array axes hold what varies (phase, time) together with the measured I/Q. The phase axis and the per-phase wall clock are stored inside the .npz.",
+  "columns": [
+    {
+      "name": "temperature_mK",
+      "dtype": "float32",
+      "unit": "mK",
+      "role": "coordinate (primary swept input)",
+      "measured": false,
+      "varies_within_file": false,
+      "computed_from": "parent folder 'npz_data_base_{T}mK' and the filename's exp_ID",
+      "values": [
+        8,
+        95,
+        200,
+        307,
+        400,
+        600,
+        750
+      ],
+      "n_unique": 7,
+      "description": "Fridge set point \u2014 the primary variable of Figure 12. This is a SET POINT, not a measured temperature: these files carry no thermometry arrays (experiment 11's do). Each temperature is a separate run, thermalised >1 hour beforehand."
+    },
+    {
+      "name": "frequency_MHz",
+      "dtype": "float32",
+      "unit": "MHz",
+      "role": "coordinate (swept input)",
+      "measured": false,
+      "varies_within_file": false,
+      "computed_from": "filename field 'freq_XXXX'",
+      "values": [
+        3400,
+        3560
+      ],
+      "n_unique": 2,
+      "description": "Drive and readout frequency. Both pulses fire at this frequency."
+    },
+    {
+      "name": "spacing_ns",
+      "dtype": "float32",
+      "unit": "ns",
+      "role": "coordinate (swept input)",
+      "measured": false,
+      "varies_within_file": false,
+      "computed_from": "filename field 'spacing_X' (microseconds) x 1000",
+      "values": [
+        10,
+        30,
+        50,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600
+      ],
+      "n_unique": 9,
+      "description": "Gap between the end of the first pulse and the start of the second. Stored in nanoseconds rather than the filenames' microseconds so the values are exact in float32. Only "
+    },
+    {
+      "name": "phase_deg",
+      "dtype": "float32",
+      "unit": "deg",
+      "role": "coordinate (swept input)",
+      "measured": false,
+      "varies_within_file": true,
+      "computed_from": "pulse_phase_array, stored in each .npz; axis 1",
+      "range": [
+        0,
+        360
+      ],
+      "n_unique": 121,
+      "description": "Phase of the FIRST pulse. The second pulse's phase is held fixed. 0 and 360 deg are the same physical point, acquired independently."
+    },
+    {
+      "name": "timestamp_ns",
+      "dtype": "float32",
+      "unit": "ns",
+      "role": "coordinate (time axis)",
+      "measured": false,
+      "varies_within_file": true,
+      "computed_from": "sample_index / 552.96 * 1000; axis 2",
+      "range": [
+        0.0,
+        1806.6406249999998
+      ],
+      "n_unique": 1000,
+      "description": "Time within the recorded trace. Directly comparable across spacings and temperatures because the second pulse is anchored."
+    },
+    {
+      "name": "elapsed_s",
+      "dtype": "float32",
+      "unit": "s",
+      "role": "acquisition metadata",
+      "measured": false,
+      "varies_within_file": true,
+      "computed_from": "time_stamp_list in each .npz, minus the campaign start",
+      "description": "Wall-clock seconds since the campaign started (the 8 mK run), recorded once per phase point. The campaign spans about three days, so this also encodes which run a row belongs to and the thermalisation gaps between set points."
+    },
+    {
+      "name": "I",
+      "dtype": "float32",
+      "unit": "ADC arbitrary units",
+      "role": "measured observable (raw)",
+      "measured": true,
+      "varies_within_file": true,
+      "computed_from": "IQ_avg_matrix[0], loaded directly from the .npz",
+      "description": "Raw in-phase homodyne signal, averaged over shots."
+    },
+    {
+      "name": "Q",
+      "dtype": "float32",
+      "unit": "ADC arbitrary units",
+      "role": "measured observable (raw)",
+      "measured": true,
+      "varies_within_file": true,
+      "computed_from": "IQ_avg_matrix[1], loaded directly from the .npz",
+      "description": "Raw quadrature homodyne signal, averaged over shots. Combined with I to compute magnitude and phase."
+    }
+  ],
+  "computable_not_stored": {
+    "magnitude": "sqrt(I^2 + Q^2)  ==  abs(I + 1j*Q)",
+    "phase": "atan2(Q, I)  ==  angle(I + 1j*Q)"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "dataset": "experiment_5_phase_control_long_spacing",
+  "format": "long (one row per time sample)",
+  "n_rows": 1089000,
+  "n_columns": 6,
+  "schema_rule": "The filename holds everything constant within a file (sample, pulse width, frequency, spacing, temperature); the array axes hold what varies (phase, time) together with the measured I/Q. The phase axis and the per-phase wall clock are stored inside the .npz.",
+  "columns": [
+    {
+      "name": "spacing_ns",
+      "dtype": "float32",
+      "unit": "ns",
+      "role": "coordinate (swept input)",
+      "measured": false,
+      "varies_within_file": false,
+      "computed_from": "filename field 'spacing_X' (microseconds) x 1000",
+      "values": [
+        10,
+        30,
+        50,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600
+      ],
+      "n_unique": 9,
+      "description": "Gap between the end of the first pulse and the start of the second, 10 to 600 ns. Stored in nanoseconds rather than the filenames' microseconds so the values are exact in float32. Spans the ~100 ns ring-down lifetime."
+    },
+    {
+      "name": "phase_deg",
+      "dtype": "float32",
+      "unit": "deg",
+      "role": "coordinate (primary swept input)",
+      "measured": false,
+      "varies_within_file": true,
+      "computed_from": "pulse_phase_array, stored in each .npz; axis 1",
+      "range": [
+        0,
+        360
+      ],
+      "n_unique": 121,
+      "description": "Phase of the FIRST pulse; the primary swept variable. The second pulse's phase is held fixed. 0 and 360 deg are the same physical point, acquired independently."
+    },
+    {
+      "name": "timestamp_ns",
+      "dtype": "float32",
+      "unit": "ns",
+      "role": "coordinate (time axis)",
+      "measured": false,
+      "varies_within_file": true,
+      "computed_from": "sample_index / 552.96 * 1000; axis 2",
+      "range": [
+        0.0,
+        1806.6406249999998
+      ],
+      "n_unique": 1000,
+      "description": "Time within the recorded trace. Directly comparable across spacings because the second pulse is anchored."
+    },
+    {
+      "name": "elapsed_s",
+      "dtype": "float32",
+      "unit": "s",
+      "role": "acquisition metadata",
+      "measured": false,
+      "varies_within_file": true,
+      "computed_from": "time_stamp_list in each .npz, minus the run start",
+      "description": "Wall-clock seconds since the run started, recorded once per phase point. Gives the acquisition order and allows drift over the run to be checked. Constant across the 1000 time samples of a single trace."
+    },
+    {
+      "name": "I",
+      "dtype": "float32",
+      "unit": "ADC arbitrary units",
+      "role": "measured observable (raw)",
+      "measured": true,
+      "varies_within_file": true,
+      "computed_from": "IQ_avg_matrix[0], loaded directly from the .npz",
+      "description": "Raw in-phase homodyne signal, averaged over shots."
+    },
+    {
+      "name": "Q",
+      "dtype": "float32",
+      "unit": "ADC arbitrary units",
+      "role": "measured observable (raw)",
+      "measured": true,
+      "varies_within_file": true,
+      "computed_from": "IQ_avg_matrix[1], loaded directly from the .npz",
+      "description": "Raw quadrature homodyne signal, averaged over shots. Combined with I to compute magnitude and phase."
+    }
+  ],
+  "computable_not_stored": {
+    "magnitude": "sqrt(I^2 + Q^2)  ==  abs(I + 1j*Q)",
+    "phase": "atan2(Q, I)  ==  angle(I + 1j*Q)"
+  }
+}
