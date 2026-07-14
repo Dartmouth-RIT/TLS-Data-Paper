@@ -25,7 +25,7 @@ import pandas as pd
 from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
-from src.dataset_creation_scripts.figure15.hamiltonian_generator import (
+from hamiltonian_generator import (
     run_simulation_single_pulse_full,
     build_spin_spin_interactions_random_distribution,
 )

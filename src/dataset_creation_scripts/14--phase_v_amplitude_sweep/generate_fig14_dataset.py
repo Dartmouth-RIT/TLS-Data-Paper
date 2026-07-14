@@ -105,6 +105,82 @@ SATURATION_COLUMNS = [
     "zero_freq_phase_fft",
 ]
 
+def load_iq_matrix(filepath: str) -> np.ndarray:
+    """
+    Load and validate a Figure 14 IQ matrix.
+
+    Expected shape:
+        (2, 500, n_time_samples)
+
+    Channel mapping:
+        array[0] = I
+        array[1] = Q
+    """
+    if not os.path.isfile(filepath):
+        raise FileNotFoundError(f"File not found: {filepath}")
+
+    with open(filepath, "rb") as file:
+        header = file.read(128)
+
+    if header.startswith(b"version https://git-lfs.github.com/spec/v1"):
+        raise RuntimeError(
+            f"{filepath} is a Git LFS pointer rather than the actual data file.\n"
+            "Run:\n"
+            "    git lfs install\n"
+            "    git lfs pull"
+        )
+
+    if not header.startswith(b"\x93NUMPY"):
+        raise ValueError(
+            f"{filepath} does not have a valid NumPy .npy header.\n"
+            f"First bytes: {header[:80]!r}"
+        )
+
+    iq_matrix = np.load(filepath, allow_pickle=False)
+
+    if not isinstance(iq_matrix, np.ndarray):
+        raise TypeError(
+            f"Expected a NumPy array, got {type(iq_matrix).__name__}"
+        )
+
+    if iq_matrix.dtype == object:
+        raise TypeError(
+            f"{filepath} has object dtype. The original BCTDS data are "
+            "expected to be numeric I/Q arrays."
+        )
+
+    if iq_matrix.ndim != 3:
+        raise ValueError(
+            f"Expected a 3D IQ array, but {filepath} has "
+            f"shape {iq_matrix.shape}."
+        )
+
+    # Support an alternate channel-last representation if necessary.
+    if iq_matrix.shape[0] != 2 and iq_matrix.shape[-1] == 2:
+        iq_matrix = np.moveaxis(iq_matrix, -1, 0)
+
+    if iq_matrix.shape[0] != 2:
+        raise ValueError(
+            f"Expected two IQ channels on axis 0, but got "
+            f"shape {iq_matrix.shape}."
+        )
+
+    expected_frequencies = len(FREQUENCY_LIST_MHZ)
+
+    if iq_matrix.shape[1] != expected_frequencies:
+        raise ValueError(
+            f"Expected {expected_frequencies} frequency rows, but "
+            f"{filepath} contains {iq_matrix.shape[1]}."
+        )
+
+    if iq_matrix.shape[2] <= TP_START_SAMPLE:
+        raise ValueError(
+            f"The file has only {iq_matrix.shape[2]} time samples, "
+            f"but cropping starts at sample {TP_START_SAMPLE}."
+        )
+
+    return iq_matrix.astype(np.float32, copy=False)
+
 
 def schema_entry(
     column_name,
@@ -315,7 +391,7 @@ def build_dataset(data_dir, output_dir):
     print(f"Output directory : {output_dir}")
     print("Raw .npy columns : I, Q only\n")
 
-    for requested_amp in tqdm(PULSE_AMP_PLOT_LIST, desc="Loading amplitude files"):
+    for requested_amp in tqdm(PULSE_AMP_AVAILABLE_LIST, desc="Loading amplitude files"):
         requested_amp = int(requested_amp)
         available_amp = get_available_amp(requested_amp)
 
@@ -326,7 +402,13 @@ def build_dataset(data_dir, output_dir):
             print(f"WARNING: missing file {filename}; skipping")
             continue
 
-        IQ_matrix = np.load(filepath)
+        # IQ_matrix = np.load(filepath)
+        try:
+            IQ_matrix = load_iq_matrix(filepath)
+        except Exception as exc:
+            raise RuntimeError(
+                f"Failed while loading Figure 14 file:\n{filepath}"
+            ) from exc
 
         if IQ_matrix.ndim != 3 or IQ_matrix.shape[0] != 2:
             print(f"WARNING: unexpected shape {IQ_matrix.shape} for {filename}; skipping")
@@ -450,7 +532,7 @@ def build_dataset(data_dir, output_dir):
         "tp_start_sample": TP_START_SAMPLE,
         "frequency_MHz_start": int(FREQUENCY_LIST_MHZ[0]),
         "frequency_MHz_stop_inclusive": int(FREQUENCY_LIST_MHZ[-1]),
-        "requested_pulse_amp_au_values": PULSE_AMP_PLOT_LIST.astype(int).tolist(),
+        # "requested_pulse_amp_au_values": PULSE_AMP_PLOT_LIST.astype(int).tolist(),
         "available_pulse_amp_au_values": PULSE_AMP_AVAILABLE_LIST.astype(int).tolist(),
         "saturation_frequency_MHz": int(SATURATION_FREQ_MHZ),
         "outputs": {

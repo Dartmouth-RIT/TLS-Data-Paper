@@ -155,12 +155,15 @@ def worker(pair):
     h_full = [h_static, [sx1 + sx2, drive_coeff]]
 
     res = mesolve(
-        h_full,
-        psi0,
-        T_NS,
-        cops,
-        [pop_op, sp1, sp2],
-        options=Options(progress_bar=None, nsteps=5000),
+        H=h_full,
+        rho0=psi0,
+        tlist=T_NS,
+        c_ops=cops,
+        e_ops=[pop_op, sp1, sp2],
+        options = {
+            "progress_bar": None,
+            "nsteps": 5000,
+        },
     )
 
     pop_t, sp1_t, sp2_t = res.expect
@@ -174,10 +177,12 @@ def worker(pair):
 
     try:
         U = propagator(
-            h_full,
-            T_PULSE_NS,
+            H=h_full,
+            t=T_PULSE_NS,
             c_ops=[],
-            options=Options(nsteps=5000),
+            options = {
+                "nsteps": 5000,
+            },
         )
         phases = np.angle(np.linalg.eigvals(U.full()))
         quasi = np.sort(
