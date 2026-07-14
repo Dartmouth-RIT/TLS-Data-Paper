@@ -31,7 +31,6 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-
 SAMPLE_ID = "1950"
 
 ADC_CLOCK_MHZ = 552.96
@@ -44,11 +43,13 @@ TP_START_SAMPLE = DISPLAY_OFFSET + TRANSIENT_PROCESSING_OFFSET
 FREQUENCY_LIST_MHZ = np.arange(4100, 4600, 1).astype(np.int32)
 FREQUENCY_LIST_GHZ = FREQUENCY_LIST_MHZ.astype(np.float32) / 1000.0
 
-PULSE_AMP_AVAILABLE_LIST = np.concatenate([
-    np.arange(0, 1000, 50),
-    np.arange(1000, 5000, 200),
-    np.arange(5000, 30001, 1000),
-]).astype(np.int32)
+PULSE_AMP_AVAILABLE_LIST = np.concatenate(
+    [
+        np.arange(0, 1000, 50),
+        np.arange(1000, 5000, 200),
+        np.arange(5000, 30001, 1000),
+    ]
+).astype(np.int32)
 
 PULSE_AMP_PLOT_LIST = np.arange(0, 30001, 1000).astype(np.int32)
 
@@ -105,6 +106,7 @@ SATURATION_COLUMNS = [
     "zero_freq_phase_fft",
 ]
 
+
 def load_iq_matrix(filepath: str) -> np.ndarray:
     """
     Load and validate a Figure 14 IQ matrix.
@@ -139,9 +141,7 @@ def load_iq_matrix(filepath: str) -> np.ndarray:
     iq_matrix = np.load(filepath, allow_pickle=False)
 
     if not isinstance(iq_matrix, np.ndarray):
-        raise TypeError(
-            f"Expected a NumPy array, got {type(iq_matrix).__name__}"
-        )
+        raise TypeError(f"Expected a NumPy array, got {type(iq_matrix).__name__}")
 
     if iq_matrix.dtype == object:
         raise TypeError(
@@ -151,8 +151,7 @@ def load_iq_matrix(filepath: str) -> np.ndarray:
 
     if iq_matrix.ndim != 3:
         raise ValueError(
-            f"Expected a 3D IQ array, but {filepath} has "
-            f"shape {iq_matrix.shape}."
+            f"Expected a 3D IQ array, but {filepath} has " f"shape {iq_matrix.shape}."
         )
 
     # Support an alternate channel-last representation if necessary.
@@ -161,8 +160,7 @@ def load_iq_matrix(filepath: str) -> np.ndarray:
 
     if iq_matrix.shape[0] != 2:
         raise ValueError(
-            f"Expected two IQ channels on axis 0, but got "
-            f"shape {iq_matrix.shape}."
+            f"Expected two IQ channels on axis 0, but got " f"shape {iq_matrix.shape}."
         )
 
     expected_frequencies = len(FREQUENCY_LIST_MHZ)
@@ -205,124 +203,192 @@ def schema_entry(
 
 MAIN_COLUMN_INFO = [
     schema_entry(
-        "sample_id", "string", False, "filename prefix", "1950", False,
-        "Sample or measurement identifier parsed from filename."
+        "sample_id",
+        "string",
+        False,
+        "filename prefix",
+        "1950",
+        False,
+        "Sample or measurement identifier parsed from filename.",
     ),
     schema_entry(
-        "requested_pulse_amp_au", "int32", False, "pulse_amp_plot_list",
-        "0 to 30000 a.u.", False,
-        "Requested amplitude used in the amplitude sweep."
+        "requested_pulse_amp_au",
+        "int32",
+        False,
+        "pulse_amp_plot_list",
+        "0 to 30000 a.u.",
+        False,
+        "Requested amplitude used in the amplitude sweep.",
     ),
     schema_entry(
-        "available_pulse_amp_au", "int32", False,
+        "available_pulse_amp_au",
+        "int32",
+        False,
         "1950_amp_<available_amp>_IQ_avg_matrix_0.npy",
-        "0 to 30000 a.u.", False,
-        "Actual raw amplitude file loaded."
+        "0 to 30000 a.u.",
+        False,
+        "Actual raw amplitude file loaded.",
     ),
     schema_entry(
-        "frequency_MHz", "int32", False, "frequency row index",
-        "4100 to 4599 MHz", False,
-        "Drive frequency associated with each matrix row."
+        "frequency_MHz",
+        "int32",
+        False,
+        "frequency row index",
+        "4100 to 4599 MHz",
+        False,
+        "Drive frequency associated with each matrix row.",
     ),
     schema_entry(
-        "frequency_GHz", "float32", False, "frequency_MHz / 1000",
-        "4.100 to 4.599 GHz", False,
-        "Drive frequency converted to GHz."
+        "frequency_GHz",
+        "float32",
+        False,
+        "frequency_MHz / 1000",
+        "4.100 to 4.599 GHz",
+        False,
+        "Drive frequency converted to GHz.",
     ),
     schema_entry(
-        "raw_time_index", "int32", False, "raw time-axis index",
-        "0 to n_time - 1", False,
-        "Original sample index before cropping."
+        "raw_time_index",
+        "int32",
+        False,
+        "raw time-axis index",
+        "0 to n_time - 1",
+        False,
+        "Original sample index before cropping.",
     ),
     schema_entry(
-        "timestamp_ns_raw", "float32", False,
+        "timestamp_ns_raw",
+        "float32",
+        False,
         "raw_time_index * 1000 / 552.96",
-        ">= 0 ns", False,
-        "Raw timestamp from ADC sampling rate."
+        ">= 0 ns",
+        False,
+        "Raw timestamp from ADC sampling rate.",
     ),
     schema_entry(
-        "I", "float32", False, "IQ_matrix[0]", "ADC dependent", True,
-        "In-phase homodyne channel. This is one of only two raw columns stored in the .npy file."
+        "I",
+        "float32",
+        False,
+        "IQ_matrix[0]",
+        "ADC dependent",
+        True,
+        "In-phase homodyne channel. This is one of only two raw columns stored in the .npy file.",
     ),
     schema_entry(
-        "Q", "float32", False, "IQ_matrix[1]", "ADC dependent", True,
-        "Quadrature homodyne channel. This is one of only two raw columns stored in the .npy file."
+        "Q",
+        "float32",
+        False,
+        "IQ_matrix[1]",
+        "ADC dependent",
+        True,
+        "Quadrature homodyne channel. This is one of only two raw columns stored in the .npy file.",
     ),
 ]
 
 DERIVED_PREVIEW_COLUMN_INFO = [
     *MAIN_COLUMN_INFO[:5],
     schema_entry(
-        "time_index_after_tp", "int32", False,
+        "time_index_after_tp",
+        "int32",
+        False,
         "raw time-axis index after TP_START_SAMPLE",
-        "0 to n_tp - 1", False,
-        "Index after removing display offset and transient-processing offset."
+        "0 to n_tp - 1",
+        False,
+        "Index after removing display offset and transient-processing offset.",
     ),
     schema_entry(
-        "timestamp_ns_after_toff", "float32", False,
+        "timestamp_ns_after_toff",
+        "float32",
+        False,
         "time_index_after_tp * 1000 / 552.96",
-        ">= 0 ns", False,
-        "Timestamp after transient-processing start."
+        ">= 0 ns",
+        False,
+        "Timestamp after transient-processing start.",
     ),
     MAIN_COLUMN_INFO[-2],
     MAIN_COLUMN_INFO[-1],
     schema_entry(
-        "amplitude", "float32", False, "sqrt(I^2 + Q^2)",
-        ">= 0", False,
-        "Magnitude of complex homodyne signal."
+        "amplitude",
+        "float32",
+        False,
+        "sqrt(I^2 + Q^2)",
+        ">= 0",
+        False,
+        "Magnitude of complex homodyne signal.",
     ),
     schema_entry(
-        "phase_rad", "float32", False, "angle(I + iQ)",
-        "[-pi, pi]", False,
-        "Wrapped phase of complex homodyne signal."
+        "phase_rad",
+        "float32",
+        False,
+        "angle(I + iQ)",
+        "[-pi, pi]",
+        False,
+        "Wrapped phase of complex homodyne signal.",
     ),
     schema_entry(
-        "log10_amplitude", "float32", False, "log10(amplitude + 0.01)",
-        "typically around -2 to 3", False,
-        "Log-scaled amplitude used in Figure 14 plots."
+        "log10_amplitude",
+        "float32",
+        False,
+        "log10(amplitude + 0.01)",
+        "typically around -2 to 3",
+        False,
+        "Log-scaled amplitude used in Figure 14 plots.",
     ),
     schema_entry(
-        "intensity", "float32", False, "amplitude^2",
-        ">= 0", False,
-        "Signal intensity."
+        "intensity", "float32", False, "amplitude^2", ">= 0", False, "Signal intensity."
     ),
 ]
 
 ZERO_SLICE_COLUMN_INFO = [
     *MAIN_COLUMN_INFO[:5],
     schema_entry(
-        "zero_time_log10_amplitude", "float32", False,
+        "zero_time_log10_amplitude",
+        "float32",
+        False,
         "log10_amplitude_tp[:, 0]",
-        "typically around -2 to 3", False,
-        "First transient-processing time sample."
+        "typically around -2 to 3",
+        False,
+        "First transient-processing time sample.",
     ),
     schema_entry(
-        "zero_fft_frequency_MHz", "float32", False,
+        "zero_fft_frequency_MHz",
+        "float32",
+        False,
         "FFT frequency axis index 0",
-        "0 MHz", False,
-        "Zero-frequency FFT slice."
+        "0 MHz",
+        False,
+        "Zero-frequency FFT slice.",
     ),
     schema_entry(
-        "zero_freq_phase_fft", "float32", False,
+        "zero_freq_phase_fft",
+        "float32",
+        False,
         "abs(fft(phase_tp))[0]",
-        ">= 0", False,
-        "Phase FFT magnitude at 0 MHz."
+        ">= 0",
+        False,
+        "Phase FFT magnitude at 0 MHz.",
     ),
 ]
 
 SATURATION_COLUMN_INFO = [
     *MAIN_COLUMN_INFO[:5],
     schema_entry(
-        "zero_time_log10_amplitude", "float32", False,
+        "zero_time_log10_amplitude",
+        "float32",
+        False,
         "log10_amplitude_tp[4487 MHz, 0]",
-        "typically around -2 to 3", False,
-        "Zero-time log amplitude at the saturation slice frequency."
+        "typically around -2 to 3",
+        False,
+        "Zero-time log amplitude at the saturation slice frequency.",
     ),
     schema_entry(
-        "zero_freq_phase_fft", "float32", False,
+        "zero_freq_phase_fft",
+        "float32",
+        False,
         "abs(fft(phase_tp[4487 MHz]))[0]",
-        ">= 0", False,
-        "Zero-frequency phase FFT at the saturation slice frequency."
+        ">= 0",
+        False,
+        "Zero-frequency phase FFT at the saturation slice frequency.",
     ),
 ]
 
@@ -348,7 +414,7 @@ def get_available_amp(requested_amp):
 
 def save_pickle(df, path):
     df.to_pickle(path)
-    size_mb = os.path.getsize(path) / (1024 ** 2)
+    size_mb = os.path.getsize(path) / (1024**2)
     print(f"Saved: {path} ({size_mb:.1f} MB)")
 
 
@@ -359,26 +425,32 @@ def build_main_dataframe_block(I_matrix, Q_matrix, requested_amp, available_amp)
     raw_time_index = np.arange(n_time, dtype=np.int32)
     timestamp_ns = raw_time_index.astype(np.float32) * np.float32(DT_NS)
 
-    return pd.DataFrame({
-        "sample_id": np.full(n_rows, SAMPLE_ID, dtype=object),
-        "requested_pulse_amp_au": np.full(n_rows, requested_amp, dtype=np.int32),
-        "available_pulse_amp_au": np.full(n_rows, available_amp, dtype=np.int32),
-        "frequency_MHz": np.repeat(FREQUENCY_LIST_MHZ, n_time).astype(np.int32),
-        "frequency_GHz": np.repeat(FREQUENCY_LIST_GHZ, n_time).astype(np.float32),
-        "raw_time_index": np.tile(raw_time_index, n_freqs),
-        "timestamp_ns_raw": np.tile(timestamp_ns, n_freqs).astype(np.float32),
-        "I": I_matrix.reshape(-1).astype(np.float32),
-        "Q": Q_matrix.reshape(-1).astype(np.float32),
-    })
+    return pd.DataFrame(
+        {
+            "sample_id": np.full(n_rows, SAMPLE_ID, dtype=object),
+            "requested_pulse_amp_au": np.full(n_rows, requested_amp, dtype=np.int32),
+            "available_pulse_amp_au": np.full(n_rows, available_amp, dtype=np.int32),
+            "frequency_MHz": np.repeat(FREQUENCY_LIST_MHZ, n_time).astype(np.int32),
+            "frequency_GHz": np.repeat(FREQUENCY_LIST_GHZ, n_time).astype(np.float32),
+            "raw_time_index": np.tile(raw_time_index, n_freqs),
+            "timestamp_ns_raw": np.tile(timestamp_ns, n_freqs).astype(np.float32),
+            "I": I_matrix.reshape(-1).astype(np.float32),
+            "Q": Q_matrix.reshape(-1).astype(np.float32),
+        }
+    )
 
 
 def build_dataset(data_dir, output_dir):
     os.makedirs(output_dir, exist_ok=True)
 
     output_main_pkl = os.path.join(output_dir, "figure14_dataset_long.pkl")
-    output_preview_pkl = os.path.join(output_dir, "figure14_time_domain_derived_preview.pkl")
+    output_preview_pkl = os.path.join(
+        output_dir, "figure14_time_domain_derived_preview.pkl"
+    )
     output_zero_pkl = os.path.join(output_dir, "figure14_zero_time_slices.pkl")
-    output_saturation_pkl = os.path.join(output_dir, "figure14_saturation_slice_4487MHz.pkl")
+    output_saturation_pkl = os.path.join(
+        output_dir, "figure14_saturation_slice_4487MHz.pkl"
+    )
     metadata_path = os.path.join(output_dir, "figure14_metadata.json")
 
     main_blocks = []
@@ -411,14 +483,18 @@ def build_dataset(data_dir, output_dir):
             ) from exc
 
         if IQ_matrix.ndim != 3 or IQ_matrix.shape[0] != 2:
-            print(f"WARNING: unexpected shape {IQ_matrix.shape} for {filename}; skipping")
+            print(
+                f"WARNING: unexpected shape {IQ_matrix.shape} for {filename}; skipping"
+            )
             continue
 
         I_matrix = IQ_matrix[0].astype(np.float32)
         Q_matrix = IQ_matrix[1].astype(np.float32)
 
         if I_matrix.shape[0] != len(FREQUENCY_LIST_MHZ):
-            print(f"WARNING: expected 500 frequencies, got {I_matrix.shape[0]} for {filename}; skipping")
+            print(
+                f"WARNING: expected 500 frequencies, got {I_matrix.shape[0]} for {filename}; skipping"
+            )
             continue
 
         main_blocks.append(
@@ -433,8 +509,10 @@ def build_dataset(data_dir, output_dir):
         complex_matrix = I_matrix + 1j * Q_matrix
         amplitude_matrix = np.abs(complex_matrix).astype(np.float32)
         phase_matrix = np.angle(complex_matrix).astype(np.float32)
-        log10_amplitude_matrix = np.log10(amplitude_matrix + np.float32(0.01)).astype(np.float32)
-        intensity_matrix = (amplitude_matrix ** 2).astype(np.float32)
+        log10_amplitude_matrix = np.log10(amplitude_matrix + np.float32(0.01)).astype(
+            np.float32
+        )
+        intensity_matrix = (amplitude_matrix**2).astype(np.float32)
 
         I_tp = I_matrix[:, TP_START_SAMPLE:]
         Q_tp = Q_matrix[:, TP_START_SAMPLE:]
@@ -445,27 +523,41 @@ def build_dataset(data_dir, output_dir):
 
         n_tp = I_tp.shape[1]
         time_index_after_tp = np.arange(n_tp, dtype=np.int32)
-        timestamp_ns_after_toff = time_index_after_tp.astype(np.float32) * np.float32(DT_NS)
+        timestamp_ns_after_toff = time_index_after_tp.astype(np.float32) * np.float32(
+            DT_NS
+        )
 
         if requested_amp in [0, 1000, 5000, 30000]:
             for freq_mhz in [4100, 4250, 4487, 4599]:
                 freq_idx = freq_mhz - 4100
 
-                preview_blocks.append(pd.DataFrame({
-                    "sample_id": np.full(n_tp, SAMPLE_ID, dtype=object),
-                    "requested_pulse_amp_au": np.full(n_tp, requested_amp, dtype=np.int32),
-                    "available_pulse_amp_au": np.full(n_tp, available_amp, dtype=np.int32),
-                    "frequency_MHz": np.full(n_tp, freq_mhz, dtype=np.int32),
-                    "frequency_GHz": np.full(n_tp, freq_mhz / 1000.0, dtype=np.float32),
-                    "time_index_after_tp": time_index_after_tp,
-                    "timestamp_ns_after_toff": timestamp_ns_after_toff,
-                    "I": I_tp[freq_idx].astype(np.float32),
-                    "Q": Q_tp[freq_idx].astype(np.float32),
-                    "amplitude": amplitude_tp[freq_idx].astype(np.float32),
-                    "phase_rad": phase_tp[freq_idx].astype(np.float32),
-                    "log10_amplitude": log10_amplitude_tp[freq_idx].astype(np.float32),
-                    "intensity": intensity_tp[freq_idx].astype(np.float32),
-                }))
+                preview_blocks.append(
+                    pd.DataFrame(
+                        {
+                            "sample_id": np.full(n_tp, SAMPLE_ID, dtype=object),
+                            "requested_pulse_amp_au": np.full(
+                                n_tp, requested_amp, dtype=np.int32
+                            ),
+                            "available_pulse_amp_au": np.full(
+                                n_tp, available_amp, dtype=np.int32
+                            ),
+                            "frequency_MHz": np.full(n_tp, freq_mhz, dtype=np.int32),
+                            "frequency_GHz": np.full(
+                                n_tp, freq_mhz / 1000.0, dtype=np.float32
+                            ),
+                            "time_index_after_tp": time_index_after_tp,
+                            "timestamp_ns_after_toff": timestamp_ns_after_toff,
+                            "I": I_tp[freq_idx].astype(np.float32),
+                            "Q": Q_tp[freq_idx].astype(np.float32),
+                            "amplitude": amplitude_tp[freq_idx].astype(np.float32),
+                            "phase_rad": phase_tp[freq_idx].astype(np.float32),
+                            "log10_amplitude": log10_amplitude_tp[freq_idx].astype(
+                                np.float32
+                            ),
+                            "intensity": intensity_tp[freq_idx].astype(np.float32),
+                        }
+                    )
+                )
 
         dt_us = DT_NS / 1000.0
         zero_freq_phase_fft = np.empty(len(FREQUENCY_LIST_MHZ), dtype=np.float32)
@@ -474,26 +566,36 @@ def build_dataset(data_dir, output_dir):
             _, phase_fft = fft_custom(phase_tp[freq_idx], dt_us)
             zero_freq_phase_fft[freq_idx] = np.float32(phase_fft[0])
 
-            zero_rows.append({
+            zero_rows.append(
+                {
+                    "sample_id": SAMPLE_ID,
+                    "requested_pulse_amp_au": np.int32(requested_amp),
+                    "available_pulse_amp_au": np.int32(available_amp),
+                    "frequency_MHz": np.int32(freq_mhz),
+                    "frequency_GHz": np.float32(freq_mhz / 1000.0),
+                    "zero_time_log10_amplitude": np.float32(
+                        log10_amplitude_tp[freq_idx, 0]
+                    ),
+                    "zero_fft_frequency_MHz": np.float32(0.0),
+                    "zero_freq_phase_fft": np.float32(phase_fft[0]),
+                }
+            )
+
+        saturation_rows.append(
+            {
                 "sample_id": SAMPLE_ID,
                 "requested_pulse_amp_au": np.int32(requested_amp),
                 "available_pulse_amp_au": np.int32(available_amp),
-                "frequency_MHz": np.int32(freq_mhz),
-                "frequency_GHz": np.float32(freq_mhz / 1000.0),
-                "zero_time_log10_amplitude": np.float32(log10_amplitude_tp[freq_idx, 0]),
-                "zero_fft_frequency_MHz": np.float32(0.0),
-                "zero_freq_phase_fft": np.float32(phase_fft[0]),
-            })
-
-        saturation_rows.append({
-            "sample_id": SAMPLE_ID,
-            "requested_pulse_amp_au": np.int32(requested_amp),
-            "available_pulse_amp_au": np.int32(available_amp),
-            "frequency_MHz": np.int32(SATURATION_FREQ_MHZ),
-            "frequency_GHz": np.float32(SATURATION_FREQ_MHZ / 1000.0),
-            "zero_time_log10_amplitude": np.float32(log10_amplitude_tp[SATURATION_FREQ_IDX, 0]),
-            "zero_freq_phase_fft": np.float32(zero_freq_phase_fft[SATURATION_FREQ_IDX]),
-        })
+                "frequency_MHz": np.int32(SATURATION_FREQ_MHZ),
+                "frequency_GHz": np.float32(SATURATION_FREQ_MHZ / 1000.0),
+                "zero_time_log10_amplitude": np.float32(
+                    log10_amplitude_tp[SATURATION_FREQ_IDX, 0]
+                ),
+                "zero_freq_phase_fft": np.float32(
+                    zero_freq_phase_fft[SATURATION_FREQ_IDX]
+                ),
+            }
+        )
 
     if not main_blocks:
         raise RuntimeError("No valid .npy files were loaded.")
@@ -514,10 +616,24 @@ def build_dataset(data_dir, output_dir):
     save_pickle(saturation_df, output_saturation_pkl)
 
     print("\nSaving column-info JSON files...")
-    save_json(MAIN_COLUMN_INFO, os.path.join(output_dir, "figure14_dataset_long_column_info.json"))
-    save_json(DERIVED_PREVIEW_COLUMN_INFO, os.path.join(output_dir, "figure14_time_domain_derived_preview_column_info.json"))
-    save_json(ZERO_SLICE_COLUMN_INFO, os.path.join(output_dir, "figure14_zero_time_slices_column_info.json"))
-    save_json(SATURATION_COLUMN_INFO, os.path.join(output_dir, "figure14_saturation_slice_4487MHz_column_info.json"))
+    save_json(
+        MAIN_COLUMN_INFO,
+        os.path.join(output_dir, "figure14_dataset_long_column_info.json"),
+    )
+    save_json(
+        DERIVED_PREVIEW_COLUMN_INFO,
+        os.path.join(
+            output_dir, "figure14_time_domain_derived_preview_column_info.json"
+        ),
+    )
+    save_json(
+        ZERO_SLICE_COLUMN_INFO,
+        os.path.join(output_dir, "figure14_zero_time_slices_column_info.json"),
+    )
+    save_json(
+        SATURATION_COLUMN_INFO,
+        os.path.join(output_dir, "figure14_saturation_slice_4487MHz_column_info.json"),
+    )
 
     metadata = {
         "figure": "Figure 14",

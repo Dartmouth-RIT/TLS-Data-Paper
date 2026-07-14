@@ -23,7 +23,6 @@ import pandas as pd
 from tqdm import tqdm
 from scipy.fft import fft, fftfreq
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # FIGURE 7 PARAMETERS
 # ─────────────────────────────────────────────────────────────────────────────
@@ -77,6 +76,7 @@ WINDOW = np.hanning(N_TIME)
 # SCHEMA HELPERS
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def schema_entry(
     column_name,
     data_type,
@@ -99,31 +99,195 @@ def schema_entry(
 
 
 PHASE_FFT_COLUMN_INFO = [
-    schema_entry("sample_id", "int32", False, "manual feature", "7", False, "Numeric sample/figure identifier."),
-    schema_entry("figure_id", "int32", False, "manual feature", "7", False, "Figure identifier."),
-    schema_entry("f1_GHz", "float32", False, "F1_HZ / 1e9", "3.0 GHz", False, "First bare transition frequency."),
-    schema_entry("f2_GHz", "float32", False, "F2_HZ / 1e9", "4.0 GHz", False, "Second bare transition frequency."),
-    schema_entry("j_rad_s", "float32", False, "J_RAD_S", "5000*pi rad/s", False, "Analytical coupling parameter."),
-    schema_entry("pulse_duration_ns","float32",False,"T_MAX_S * 1e9","1000 ns",False,"Effective analytical pulse/evolution duration used to generate the phase trace."),
-    schema_entry("omega_drive_amp_rad_s", "float32", False, "OMEGA_DRIVE_AMP_RAD_S", "2*pi*100 rad/s", False, "Analytical drive-amplitude parameter."),
-    schema_entry("drive_frequency_GHz", "float32", False, "DRIVE_FREQ_HZ / 1e9", "2.6 to 4.4 GHz", False, "Swept drive frequency."),
-    schema_entry("fft_frequency_Hz", "float32", False, "positive FFT frequency axis", ">= 0 Hz", False, "Positive FFT frequency."),
-    schema_entry("fft_frequency_MHz", "float32", False, "fft_frequency_Hz / 1e6", ">= 0 MHz", False, "Positive FFT frequency in MHz."),
-    schema_entry("normalized_phase_fft", "float32", False, "phase_eg_fft", "0 to 1", False, "Normalized FFT magnitude of analytical phase signal."),
-    schema_entry("gamma_corrected_phase_fft", "float32", False, "(phase_eg_fft / vmax)^gamma * vmax", ">= 0", False, "Gamma-corrected FFT intensity used only for visualization."),
+    schema_entry(
+        "sample_id",
+        "int32",
+        False,
+        "manual feature",
+        "7",
+        False,
+        "Numeric sample/figure identifier.",
+    ),
+    schema_entry(
+        "figure_id", "int32", False, "manual feature", "7", False, "Figure identifier."
+    ),
+    schema_entry(
+        "f1_GHz",
+        "float32",
+        False,
+        "F1_HZ / 1e9",
+        "3.0 GHz",
+        False,
+        "First bare transition frequency.",
+    ),
+    schema_entry(
+        "f2_GHz",
+        "float32",
+        False,
+        "F2_HZ / 1e9",
+        "4.0 GHz",
+        False,
+        "Second bare transition frequency.",
+    ),
+    schema_entry(
+        "j_rad_s",
+        "float32",
+        False,
+        "J_RAD_S",
+        "5000*pi rad/s",
+        False,
+        "Analytical coupling parameter.",
+    ),
+    schema_entry(
+        "pulse_duration_ns",
+        "float32",
+        False,
+        "T_MAX_S * 1e9",
+        "1000 ns",
+        False,
+        "Effective analytical pulse/evolution duration used to generate the phase trace.",
+    ),
+    schema_entry(
+        "omega_drive_amp_rad_s",
+        "float32",
+        False,
+        "OMEGA_DRIVE_AMP_RAD_S",
+        "2*pi*100 rad/s",
+        False,
+        "Analytical drive-amplitude parameter.",
+    ),
+    schema_entry(
+        "drive_frequency_GHz",
+        "float32",
+        False,
+        "DRIVE_FREQ_HZ / 1e9",
+        "2.6 to 4.4 GHz",
+        False,
+        "Swept drive frequency.",
+    ),
+    schema_entry(
+        "fft_frequency_Hz",
+        "float32",
+        False,
+        "positive FFT frequency axis",
+        ">= 0 Hz",
+        False,
+        "Positive FFT frequency.",
+    ),
+    schema_entry(
+        "fft_frequency_MHz",
+        "float32",
+        False,
+        "fft_frequency_Hz / 1e6",
+        ">= 0 MHz",
+        False,
+        "Positive FFT frequency in MHz.",
+    ),
+    schema_entry(
+        "normalized_phase_fft",
+        "float32",
+        False,
+        "phase_eg_fft",
+        "0 to 1",
+        False,
+        "Normalized FFT magnitude of analytical phase signal.",
+    ),
+    schema_entry(
+        "gamma_corrected_phase_fft",
+        "float32",
+        False,
+        "(phase_eg_fft / vmax)^gamma * vmax",
+        ">= 0",
+        False,
+        "Gamma-corrected FFT intensity used only for visualization.",
+    ),
 ]
 
 LINECUT_COLUMN_INFO = [
-    schema_entry("sample_id", "int32", False, "manual feature", "7", False, "Numeric sample/figure identifier."),
-    schema_entry("figure_id", "int32", False, "manual feature", "7", False, "Figure identifier."),
-    schema_entry("f1_GHz", "float32", False, "F1_HZ / 1e9", "3.0 GHz", False, "First bare transition frequency."),
-    schema_entry("f2_GHz", "float32", False, "F2_HZ / 1e9", "4.0 GHz", False, "Second bare transition frequency."),
-    schema_entry("j_rad_s", "float32", False, "J_RAD_S", "5000*pi rad/s", False, "Analytical coupling parameter."),
-    schema_entry("pulse_duration_ns","float32",False,"T_MAX_S * 1e9","1000 ns",False,"Effective analytical pulse/evolution duration used to generate the phase trace."),
-    schema_entry("omega_drive_amp_rad_s", "float32", False, "OMEGA_DRIVE_AMP_RAD_S", "2*pi*100 rad/s", False, "Analytical drive-amplitude parameter."),
-    schema_entry("drive_frequency_GHz", "float32", False, "DRIVE_FREQ_HZ / 1e9", "2.6 to 4.4 GHz", False, "Swept drive frequency."),
-    schema_entry("fft_frequency_MHz", "float32", False, "zero FFT index", "0 MHz", False, "Zero-frequency FFT slice."),
-    schema_entry("zero_freq_normalized_phase_fft", "float32", False, "phase_eg_fft[zero_idx, :]", "0 to 1", False, "Linecut at zero FFT frequency."),
+    schema_entry(
+        "sample_id",
+        "int32",
+        False,
+        "manual feature",
+        "7",
+        False,
+        "Numeric sample/figure identifier.",
+    ),
+    schema_entry(
+        "figure_id", "int32", False, "manual feature", "7", False, "Figure identifier."
+    ),
+    schema_entry(
+        "f1_GHz",
+        "float32",
+        False,
+        "F1_HZ / 1e9",
+        "3.0 GHz",
+        False,
+        "First bare transition frequency.",
+    ),
+    schema_entry(
+        "f2_GHz",
+        "float32",
+        False,
+        "F2_HZ / 1e9",
+        "4.0 GHz",
+        False,
+        "Second bare transition frequency.",
+    ),
+    schema_entry(
+        "j_rad_s",
+        "float32",
+        False,
+        "J_RAD_S",
+        "5000*pi rad/s",
+        False,
+        "Analytical coupling parameter.",
+    ),
+    schema_entry(
+        "pulse_duration_ns",
+        "float32",
+        False,
+        "T_MAX_S * 1e9",
+        "1000 ns",
+        False,
+        "Effective analytical pulse/evolution duration used to generate the phase trace.",
+    ),
+    schema_entry(
+        "omega_drive_amp_rad_s",
+        "float32",
+        False,
+        "OMEGA_DRIVE_AMP_RAD_S",
+        "2*pi*100 rad/s",
+        False,
+        "Analytical drive-amplitude parameter.",
+    ),
+    schema_entry(
+        "drive_frequency_GHz",
+        "float32",
+        False,
+        "DRIVE_FREQ_HZ / 1e9",
+        "2.6 to 4.4 GHz",
+        False,
+        "Swept drive frequency.",
+    ),
+    schema_entry(
+        "fft_frequency_MHz",
+        "float32",
+        False,
+        "zero FFT index",
+        "0 MHz",
+        False,
+        "Zero-frequency FFT slice.",
+    ),
+    schema_entry(
+        "zero_freq_normalized_phase_fft",
+        "float32",
+        False,
+        "phase_eg_fft[zero_idx, :]",
+        "0 to 1",
+        False,
+        "Linecut at zero FFT frequency.",
+    ),
 ]
 
 
@@ -134,13 +298,14 @@ def save_json(obj, path):
 
 def save_pickle(df, path):
     df.to_pickle(path)
-    size_mb = os.path.getsize(path) / (1024 ** 2)
+    size_mb = os.path.getsize(path) / (1024**2)
     print(f"Saved: {path} ({size_mb:.2f} MB)")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # ANALYTICAL COMPUTATION
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 def compute_phase_fft():
     phase_eg_fft = np.zeros((len(FFT_FREQ_HZ_POS), NUM_DRIVE_FREQS), dtype=np.float32)
@@ -174,13 +339,13 @@ def compute_phase_fft():
         I_tau1 = np.zeros_like(T_S, dtype=complex)
 
         for idx1 in range(N_TIME):
-            integrand_tau2 = exp_delta_pos[:idx1 + 1] * I_tau2[:idx1 + 1]
+            integrand_tau2 = exp_delta_pos[: idx1 + 1] * I_tau2[: idx1 + 1]
             I_tau1[idx1] = np.sum(integrand_tau2) * DT_S
 
         integrand_tau1 = exp_delta_neg * I_tau1
         integral_I = np.cumsum(integrand_tau1) * DT_S
 
-        c_eg_2 = 1j * (OMEGA_DRIVE_AMP_RAD_S / 2) * (J_RAD_S ** 2) * integral_I
+        c_eg_2 = 1j * (OMEGA_DRIVE_AMP_RAD_S / 2) * (J_RAD_S**2) * integral_I
 
         c_eg = c_eg_0 + c_eg_1 + c_eg_2
         phi_eg = np.angle(c_eg)
@@ -193,7 +358,9 @@ def compute_phase_fft():
 
     vmax = np.max(phase_eg_fft)
     if vmax > EPS:
-        gamma_corrected = ((phase_eg_fft / vmax) ** GAMMA_CORRECTION * vmax).astype(np.float32)
+        gamma_corrected = ((phase_eg_fft / vmax) ** GAMMA_CORRECTION * vmax).astype(
+            np.float32
+        )
     else:
         gamma_corrected = np.zeros_like(phase_eg_fft, dtype=np.float32)
 
@@ -205,46 +372,64 @@ def compute_phase_fft():
 # DATAFRAME BUILDERS
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def build_phase_fft_df(phase_eg_fft, gamma_corrected):
     n_fft, n_drive = phase_eg_fft.shape
     n_rows = n_fft * n_drive
 
-    return pd.DataFrame({
-        "sample_id": np.full(n_rows, SAMPLE_ID, dtype=np.int32),
-        "figure_id": np.full(n_rows, FIGURE_ID, dtype=np.int32),
-        "f1_GHz": np.full(n_rows, F1_HZ / 1e9, dtype=np.float32),
-        "f2_GHz": np.full(n_rows, F2_HZ / 1e9, dtype=np.float32),
-        "j_rad_s": np.full(n_rows, J_RAD_S, dtype=np.float32),
-        "pulse_duration_ns": np.full(n_rows, PULSE_DURATION_NS, dtype=np.float32),
-        "omega_drive_amp_rad_s": np.full(n_rows, OMEGA_DRIVE_AMP_RAD_S, dtype=np.float32),
-        "drive_frequency_GHz": np.tile(DRIVE_FREQ_GHZ, n_fft).astype(np.float32),
-        "fft_frequency_Hz": np.repeat(FFT_FREQ_HZ_POS, n_drive).astype(np.float32),
-        "fft_frequency_MHz": np.repeat(FFT_FREQ_MHZ_POS, n_drive).astype(np.float32),
-        "normalized_phase_fft": phase_eg_fft.reshape(-1).astype(np.float32),
-        "gamma_corrected_phase_fft": gamma_corrected.reshape(-1).astype(np.float32),
-    })
+    return pd.DataFrame(
+        {
+            "sample_id": np.full(n_rows, SAMPLE_ID, dtype=np.int32),
+            "figure_id": np.full(n_rows, FIGURE_ID, dtype=np.int32),
+            "f1_GHz": np.full(n_rows, F1_HZ / 1e9, dtype=np.float32),
+            "f2_GHz": np.full(n_rows, F2_HZ / 1e9, dtype=np.float32),
+            "j_rad_s": np.full(n_rows, J_RAD_S, dtype=np.float32),
+            "pulse_duration_ns": np.full(n_rows, PULSE_DURATION_NS, dtype=np.float32),
+            "omega_drive_amp_rad_s": np.full(
+                n_rows, OMEGA_DRIVE_AMP_RAD_S, dtype=np.float32
+            ),
+            "drive_frequency_GHz": np.tile(DRIVE_FREQ_GHZ, n_fft).astype(np.float32),
+            "fft_frequency_Hz": np.repeat(FFT_FREQ_HZ_POS, n_drive).astype(np.float32),
+            "fft_frequency_MHz": np.repeat(FFT_FREQ_MHZ_POS, n_drive).astype(
+                np.float32
+            ),
+            "normalized_phase_fft": phase_eg_fft.reshape(-1).astype(np.float32),
+            "gamma_corrected_phase_fft": gamma_corrected.reshape(-1).astype(np.float32),
+        }
+    )
 
 
 def build_zero_linecut_df(phase_eg_fft):
     zero_idx = int(np.argmin(np.abs(FFT_FREQ_MHZ_POS - 0.0)))
 
-    return pd.DataFrame({
-        "sample_id": np.full(NUM_DRIVE_FREQS, SAMPLE_ID, dtype=np.int32),
-        "figure_id": np.full(NUM_DRIVE_FREQS, FIGURE_ID, dtype=np.int32),
-        "f1_GHz": np.full(NUM_DRIVE_FREQS, F1_HZ / 1e9, dtype=np.float32),
-        "f2_GHz": np.full(NUM_DRIVE_FREQS, F2_HZ / 1e9, dtype=np.float32),
-        "j_rad_s": np.full(NUM_DRIVE_FREQS, J_RAD_S, dtype=np.float32),
-        "pulse_duration_ns": np.full(NUM_DRIVE_FREQS, PULSE_DURATION_NS, dtype=np.float32),
-        "omega_drive_amp_rad_s": np.full(NUM_DRIVE_FREQS, OMEGA_DRIVE_AMP_RAD_S, dtype=np.float32),
-        "drive_frequency_GHz": DRIVE_FREQ_GHZ.astype(np.float32),
-        "fft_frequency_MHz": np.full(NUM_DRIVE_FREQS, FFT_FREQ_MHZ_POS[zero_idx], dtype=np.float32),
-        "zero_freq_normalized_phase_fft": phase_eg_fft[zero_idx, :].astype(np.float32),
-    })
+    return pd.DataFrame(
+        {
+            "sample_id": np.full(NUM_DRIVE_FREQS, SAMPLE_ID, dtype=np.int32),
+            "figure_id": np.full(NUM_DRIVE_FREQS, FIGURE_ID, dtype=np.int32),
+            "f1_GHz": np.full(NUM_DRIVE_FREQS, F1_HZ / 1e9, dtype=np.float32),
+            "f2_GHz": np.full(NUM_DRIVE_FREQS, F2_HZ / 1e9, dtype=np.float32),
+            "j_rad_s": np.full(NUM_DRIVE_FREQS, J_RAD_S, dtype=np.float32),
+            "pulse_duration_ns": np.full(
+                NUM_DRIVE_FREQS, PULSE_DURATION_NS, dtype=np.float32
+            ),
+            "omega_drive_amp_rad_s": np.full(
+                NUM_DRIVE_FREQS, OMEGA_DRIVE_AMP_RAD_S, dtype=np.float32
+            ),
+            "drive_frequency_GHz": DRIVE_FREQ_GHZ.astype(np.float32),
+            "fft_frequency_MHz": np.full(
+                NUM_DRIVE_FREQS, FFT_FREQ_MHZ_POS[zero_idx], dtype=np.float32
+            ),
+            "zero_freq_normalized_phase_fft": phase_eg_fft[zero_idx, :].astype(
+                np.float32
+            ),
+        }
+    )
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # MAIN
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 def build_dataset(output_dir):
     os.makedirs(output_dir, exist_ok=True)

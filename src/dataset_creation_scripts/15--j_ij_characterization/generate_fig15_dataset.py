@@ -30,7 +30,6 @@ from hamiltonian_generator import (
     build_spin_spin_interactions_random_distribution,
 )
 
-
 SAMPLE_ID = 15
 FIGURE_ID = 15
 
@@ -64,8 +63,15 @@ FFT_VIEW_MHZ = 100.0
 MAX_WORKERS = 70
 
 
-def schema_entry(column_name, data_type, can_have_nulls, maps_to_original,
-                 value_or_range, in_raw_simulation, derivation_or_notes):
+def schema_entry(
+    column_name,
+    data_type,
+    can_have_nulls,
+    maps_to_original,
+    value_or_range,
+    in_raw_simulation,
+    derivation_or_notes,
+):
     return {
         "column_name": column_name,
         "data_type": data_type,
@@ -79,35 +85,181 @@ def schema_entry(column_name, data_type, can_have_nulls, maps_to_original,
 
 
 TIME_COLUMN_INFO = [
-    schema_entry("sample_id", "int32", False, "manual feature", "15", False, "Numeric sample identifier."),
-    schema_entry("figure_id", "int32", False, "manual feature", "15", False, "Figure identifier."),
-    schema_entry("j_label", "string", False, "J_LEVELS key", "Low J, Mid J, High J", False, "Interaction-strength category."),
-    schema_entry("j_coupling_GHz", "float32", False, "J_LEVELS value", "0.005, 0.05, 0.5", False, "All-to-all coupling scale."),
-    schema_entry("n_tls", "int32", False, "N_TLS", "4", False, "Number of TLS defects."),
-    schema_entry("drive_amp_GHz", "float32", False, "AMP_DRIVE", "0.01", False, "Drive amplitude."),
-    schema_entry("gamma_collective_GHz", "float32", False, "GAMMA", "0.001", False, "Collective decay rate."),
-    schema_entry("gamma_phi_GHz", "float32", False, "GAMMA_PHI", "0.0", False, "Pure dephasing rate."),
-    schema_entry("pulse_duration_ns", "float32", False, "PULSE_NS", "400 ns", False, "Single-pulse duration."),
-    schema_entry("t_ramp_ns", "float32", False, "T_RAMP_NS", "1 ns", False, "Pulse ramp duration."),
-    schema_entry("drive_frequency_GHz", "float32", False, "FREQ_AXIS", "3.0 to 5.0 GHz", False, "Swept drive frequency."),
-    schema_entry("time_ns", "float32", False, "tlist", "0 to 1600 ns", False, "Simulation time."),
-    schema_entry("time_us", "float32", False, "time_ns / 1000", "0 to 1.6 us", False, "Simulation time in microseconds."),
-    schema_entry("population", "float32", False, "pop_mat", ">= 0", True, "Expectation value <S+S->."),
-    schema_entry("phase_rad", "float32", False, "angle(Sp)", "[-pi, pi]", True, "Wrapped homodyne-like collective phase."),
+    schema_entry(
+        "sample_id",
+        "int32",
+        False,
+        "manual feature",
+        "15",
+        False,
+        "Numeric sample identifier.",
+    ),
+    schema_entry(
+        "figure_id", "int32", False, "manual feature", "15", False, "Figure identifier."
+    ),
+    schema_entry(
+        "j_label",
+        "string",
+        False,
+        "J_LEVELS key",
+        "Low J, Mid J, High J",
+        False,
+        "Interaction-strength category.",
+    ),
+    schema_entry(
+        "j_coupling_GHz",
+        "float32",
+        False,
+        "J_LEVELS value",
+        "0.005, 0.05, 0.5",
+        False,
+        "All-to-all coupling scale.",
+    ),
+    schema_entry(
+        "n_tls", "int32", False, "N_TLS", "4", False, "Number of TLS defects."
+    ),
+    schema_entry(
+        "drive_amp_GHz",
+        "float32",
+        False,
+        "AMP_DRIVE",
+        "0.01",
+        False,
+        "Drive amplitude.",
+    ),
+    schema_entry(
+        "gamma_collective_GHz",
+        "float32",
+        False,
+        "GAMMA",
+        "0.001",
+        False,
+        "Collective decay rate.",
+    ),
+    schema_entry(
+        "gamma_phi_GHz",
+        "float32",
+        False,
+        "GAMMA_PHI",
+        "0.0",
+        False,
+        "Pure dephasing rate.",
+    ),
+    schema_entry(
+        "pulse_duration_ns",
+        "float32",
+        False,
+        "PULSE_NS",
+        "400 ns",
+        False,
+        "Single-pulse duration.",
+    ),
+    schema_entry(
+        "t_ramp_ns",
+        "float32",
+        False,
+        "T_RAMP_NS",
+        "1 ns",
+        False,
+        "Pulse ramp duration.",
+    ),
+    schema_entry(
+        "drive_frequency_GHz",
+        "float32",
+        False,
+        "FREQ_AXIS",
+        "3.0 to 5.0 GHz",
+        False,
+        "Swept drive frequency.",
+    ),
+    schema_entry(
+        "time_ns", "float32", False, "tlist", "0 to 1600 ns", False, "Simulation time."
+    ),
+    schema_entry(
+        "time_us",
+        "float32",
+        False,
+        "time_ns / 1000",
+        "0 to 1.6 us",
+        False,
+        "Simulation time in microseconds.",
+    ),
+    schema_entry(
+        "population",
+        "float32",
+        False,
+        "pop_mat",
+        ">= 0",
+        True,
+        "Expectation value <S+S->.",
+    ),
+    schema_entry(
+        "phase_rad",
+        "float32",
+        False,
+        "angle(Sp)",
+        "[-pi, pi]",
+        True,
+        "Wrapped homodyne-like collective phase.",
+    ),
 ]
 
 FFT_COLUMN_INFO = [
     *TIME_COLUMN_INFO[:11],
-    schema_entry("fft_frequency_MHz", "float32", False, "np.fft.rfftfreq", "0 to 100 MHz", False, "FFT frequency axis."),
-    schema_entry("log10_fft_population", "float32", False, "log10(abs(rfft(population)) + 1e-12)", "real", False, "Log FFT magnitude of population."),
-    schema_entry("log10_fft_phase", "float32", False, "log10(abs(rfft(phase)) + 1e-12)", "real", False, "Log FFT magnitude of phase."),
+    schema_entry(
+        "fft_frequency_MHz",
+        "float32",
+        False,
+        "np.fft.rfftfreq",
+        "0 to 100 MHz",
+        False,
+        "FFT frequency axis.",
+    ),
+    schema_entry(
+        "log10_fft_population",
+        "float32",
+        False,
+        "log10(abs(rfft(population)) + 1e-12)",
+        "real",
+        False,
+        "Log FFT magnitude of population.",
+    ),
+    schema_entry(
+        "log10_fft_phase",
+        "float32",
+        False,
+        "log10(abs(rfft(phase)) + 1e-12)",
+        "real",
+        False,
+        "Log FFT magnitude of phase.",
+    ),
 ]
 
 TLS_FREQ_COLUMN_INFO = [
-    schema_entry("sample_id", "int32", False, "manual feature", "15", False, "Numeric sample identifier."),
-    schema_entry("figure_id", "int32", False, "manual feature", "15", False, "Figure identifier."),
-    schema_entry("tls_index", "int32", False, "base_freqs index", "0 to 3", False, "TLS index."),
-    schema_entry("tls_frequency_GHz", "float32", False, "base_freqs", "3.0 to 5.0 GHz", False, "Randomly generated TLS bare frequency."),
+    schema_entry(
+        "sample_id",
+        "int32",
+        False,
+        "manual feature",
+        "15",
+        False,
+        "Numeric sample identifier.",
+    ),
+    schema_entry(
+        "figure_id", "int32", False, "manual feature", "15", False, "Figure identifier."
+    ),
+    schema_entry(
+        "tls_index", "int32", False, "base_freqs index", "0 to 3", False, "TLS index."
+    ),
+    schema_entry(
+        "tls_frequency_GHz",
+        "float32",
+        False,
+        "base_freqs",
+        "3.0 to 5.0 GHz",
+        False,
+        "Randomly generated TLS bare frequency.",
+    ),
 ]
 
 
@@ -122,7 +274,9 @@ def save_pickle(df, path):
 
 
 def worker(args):
-    freq, amp_drive, tlist, base_freqs, H_int, gamma, gamma_phi, pulse_ns, t_ramp_ns = args
+    freq, amp_drive, tlist, base_freqs, H_int, gamma, gamma_phi, pulse_ns, t_ramp_ns = (
+        args
+    )
     pop, Sp, Sm = run_simulation_single_pulse_full(
         freq,
         amp_drive,
@@ -148,27 +302,33 @@ def build_time_df(j_label, j_val, pop_mat, phi_mat):
     time_ns = np.repeat(TLIST_NS, n_f).astype(np.float32)
     drive_freq = np.tile(FREQ_AXIS_GHZ, n_t).astype(np.float32)
 
-    return pd.DataFrame({
-        "sample_id": np.full(n_rows, SAMPLE_ID, dtype=np.int32),
-        "figure_id": np.full(n_rows, FIGURE_ID, dtype=np.int32),
-        "j_label": np.full(n_rows, j_label, dtype=object),
-        "j_coupling_GHz": np.full(n_rows, j_val, dtype=np.float32),
-        "n_tls": np.full(n_rows, N_TLS, dtype=np.int32),
-        "drive_amp_GHz": np.full(n_rows, AMP_DRIVE, dtype=np.float32),
-        "gamma_collective_GHz": np.full(n_rows, GAMMA, dtype=np.float32),
-        "gamma_phi_GHz": np.full(n_rows, GAMMA_PHI, dtype=np.float32),
-        "pulse_duration_ns": np.full(n_rows, PULSE_NS, dtype=np.float32),
-        "t_ramp_ns": np.full(n_rows, T_RAMP_NS, dtype=np.float32),
-        "drive_frequency_GHz": drive_freq,
-        "time_ns": time_ns,
-        "time_us": time_ns / np.float32(1000.0),
-        "population": pop_mat.reshape(-1).astype(np.float32),
-        "phase_rad": phi_mat.reshape(-1).astype(np.float32),
-    })
+    return pd.DataFrame(
+        {
+            "sample_id": np.full(n_rows, SAMPLE_ID, dtype=np.int32),
+            "figure_id": np.full(n_rows, FIGURE_ID, dtype=np.int32),
+            "j_label": np.full(n_rows, j_label, dtype=object),
+            "j_coupling_GHz": np.full(n_rows, j_val, dtype=np.float32),
+            "n_tls": np.full(n_rows, N_TLS, dtype=np.int32),
+            "drive_amp_GHz": np.full(n_rows, AMP_DRIVE, dtype=np.float32),
+            "gamma_collective_GHz": np.full(n_rows, GAMMA, dtype=np.float32),
+            "gamma_phi_GHz": np.full(n_rows, GAMMA_PHI, dtype=np.float32),
+            "pulse_duration_ns": np.full(n_rows, PULSE_NS, dtype=np.float32),
+            "t_ramp_ns": np.full(n_rows, T_RAMP_NS, dtype=np.float32),
+            "drive_frequency_GHz": drive_freq,
+            "time_ns": time_ns,
+            "time_us": time_ns / np.float32(1000.0),
+            "population": pop_mat.reshape(-1).astype(np.float32),
+            "phase_rad": phi_mat.reshape(-1).astype(np.float32),
+        }
+    )
 
 
 def build_fft_df(j_label, j_val, pop_mat, phi_mat):
-    mask_tail = (TLIST_NS > PULSE_NS) if AFTER_PULSE_ONLY else np.ones_like(TLIST_NS, dtype=bool)
+    mask_tail = (
+        (TLIST_NS > PULSE_NS)
+        if AFTER_PULSE_ONLY
+        else np.ones_like(TLIST_NS, dtype=bool)
+    )
     tail_t = TLIST_NS[mask_tail]
 
     fft_freq_mhz = (
@@ -189,31 +349,35 @@ def build_fft_df(j_label, j_val, pop_mat, phi_mat):
     n_fft, n_f = fft_pop.shape
     n_rows = n_fft * n_f
 
-    return pd.DataFrame({
-        "sample_id": np.full(n_rows, SAMPLE_ID, dtype=np.int32),
-        "figure_id": np.full(n_rows, FIGURE_ID, dtype=np.int32),
-        "j_label": np.full(n_rows, j_label, dtype=object),
-        "j_coupling_GHz": np.full(n_rows, j_val, dtype=np.float32),
-        "n_tls": np.full(n_rows, N_TLS, dtype=np.int32),
-        "drive_amp_GHz": np.full(n_rows, AMP_DRIVE, dtype=np.float32),
-        "gamma_collective_GHz": np.full(n_rows, GAMMA, dtype=np.float32),
-        "gamma_phi_GHz": np.full(n_rows, GAMMA_PHI, dtype=np.float32),
-        "pulse_duration_ns": np.full(n_rows, PULSE_NS, dtype=np.float32),
-        "t_ramp_ns": np.full(n_rows, T_RAMP_NS, dtype=np.float32),
-        "drive_frequency_GHz": np.tile(FREQ_AXIS_GHZ, n_fft).astype(np.float32),
-        "fft_frequency_MHz": np.repeat(fft_freq, n_f).astype(np.float32),
-        "log10_fft_population": fft_pop.reshape(-1).astype(np.float32),
-        "log10_fft_phase": fft_phi.reshape(-1).astype(np.float32),
-    })
+    return pd.DataFrame(
+        {
+            "sample_id": np.full(n_rows, SAMPLE_ID, dtype=np.int32),
+            "figure_id": np.full(n_rows, FIGURE_ID, dtype=np.int32),
+            "j_label": np.full(n_rows, j_label, dtype=object),
+            "j_coupling_GHz": np.full(n_rows, j_val, dtype=np.float32),
+            "n_tls": np.full(n_rows, N_TLS, dtype=np.int32),
+            "drive_amp_GHz": np.full(n_rows, AMP_DRIVE, dtype=np.float32),
+            "gamma_collective_GHz": np.full(n_rows, GAMMA, dtype=np.float32),
+            "gamma_phi_GHz": np.full(n_rows, GAMMA_PHI, dtype=np.float32),
+            "pulse_duration_ns": np.full(n_rows, PULSE_NS, dtype=np.float32),
+            "t_ramp_ns": np.full(n_rows, T_RAMP_NS, dtype=np.float32),
+            "drive_frequency_GHz": np.tile(FREQ_AXIS_GHZ, n_fft).astype(np.float32),
+            "fft_frequency_MHz": np.repeat(fft_freq, n_f).astype(np.float32),
+            "log10_fft_population": fft_pop.reshape(-1).astype(np.float32),
+            "log10_fft_phase": fft_phi.reshape(-1).astype(np.float32),
+        }
+    )
 
 
 def build_tls_freq_df(base_freqs):
-    return pd.DataFrame({
-        "sample_id": np.full(N_TLS, SAMPLE_ID, dtype=np.int32),
-        "figure_id": np.full(N_TLS, FIGURE_ID, dtype=np.int32),
-        "tls_index": np.arange(N_TLS, dtype=np.int32),
-        "tls_frequency_GHz": np.asarray(base_freqs, dtype=np.float32),
-    })
+    return pd.DataFrame(
+        {
+            "sample_id": np.full(N_TLS, SAMPLE_ID, dtype=np.int32),
+            "figure_id": np.full(N_TLS, FIGURE_ID, dtype=np.int32),
+            "tls_index": np.arange(N_TLS, dtype=np.int32),
+            "tls_frequency_GHz": np.asarray(base_freqs, dtype=np.float32),
+        }
+    )
 
 
 def build_dataset(output_dir):
@@ -277,9 +441,18 @@ def build_dataset(output_dir):
     save_pickle(fft_df, os.path.join(output_dir, "figure15_fft_domain.pkl"))
     save_pickle(tls_df, os.path.join(output_dir, "figure15_tls_frequencies.pkl"))
 
-    save_json(TIME_COLUMN_INFO, os.path.join(output_dir, "figure15_time_domain_column_info.json"))
-    save_json(FFT_COLUMN_INFO, os.path.join(output_dir, "figure15_fft_domain_column_info.json"))
-    save_json(TLS_FREQ_COLUMN_INFO, os.path.join(output_dir, "figure15_tls_frequencies_column_info.json"))
+    save_json(
+        TIME_COLUMN_INFO,
+        os.path.join(output_dir, "figure15_time_domain_column_info.json"),
+    )
+    save_json(
+        FFT_COLUMN_INFO,
+        os.path.join(output_dir, "figure15_fft_domain_column_info.json"),
+    )
+    save_json(
+        TLS_FREQ_COLUMN_INFO,
+        os.path.join(output_dir, "figure15_tls_frequencies_column_info.json"),
+    )
 
     metadata = {
         "figure": 15,

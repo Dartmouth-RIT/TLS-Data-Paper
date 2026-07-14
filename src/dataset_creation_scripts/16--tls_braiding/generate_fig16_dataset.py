@@ -38,7 +38,6 @@ from qutip import (
     Options,
 )
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # FIGURE 16 PARAMETERS
 # ─────────────────────────────────────────────────────────────────────────────
@@ -94,6 +93,7 @@ FFT_FREQ_MHZ = (FFT_FREQ_GHZ[FFT_POS_MASK] * 1000.0).astype(np.float32)
 # COLUMN INFO
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def schema_entry(
     column_name,
     data_type,
@@ -116,39 +116,196 @@ def schema_entry(
 
 
 COMMON_COLUMN_INFO = [
-    schema_entry("sample_id", "int32", False, "manual feature", "16", False, "Numeric sample identifier."),
-    schema_entry("figure_id", "int32", False, "manual feature", "16", False, "Figure identifier."),
-    schema_entry("configuration", "string", False, "CONFIGURATIONS key", "non_degenerate / degenerate", False, "TLS frequency configuration."),
-    schema_entry("omega_tls_1_GHz", "float32", False, "omega_tls_1", "4.0 GHz", False, "TLS 1 transition frequency."),
-    schema_entry("omega_tls_2_GHz", "float32", False, "omega_tls_2", "4.0 or 4.12 GHz", False, "TLS 2 transition frequency."),
-    schema_entry("j_coupling_GHz", "float32", False, "J_COUPLING_GHZ", "0.01 GHz", False, "TLS-TLS coupling strength."),
-    schema_entry("drive_amplitude_GHz", "float32", False, "DRIVE_AMPLITUDE_GHZ", "0.10 GHz", False, "Drive amplitude."),
-    schema_entry("pulse_duration_ns", "float32", False, "PULSE_DURATION_NS", "100 ns", False, "Drive pulse duration."),
-    schema_entry("total_time_ns", "float32", False, "TOTAL_TIME_NS", "800 ns", False, "Total simulation time."),
-    schema_entry("time_step_ns", "float32", False, "DT_NS", "0.01 ns", False, "Simulation time step."),
-    schema_entry("gamma_collective_ns_inv", "float32", False, "gamma_collective", "0.002 ns^-1", False, "Collective decay rate."),
-    schema_entry("gamma_local_1_ns_inv", "float32", False, "gamma_local_1", "0.0001 ns^-1", False, "Local decay rate of TLS 1."),
-    schema_entry("gamma_local_2_ns_inv", "float32", False, "gamma_local_2", "0.0005 ns^-1", False, "Local decay rate of TLS 2."),
-    schema_entry("drive_frequency_GHz", "float32", False, "omega_d_vals", "3.0 to 5.0 GHz", False, "Swept drive frequency."),
+    schema_entry(
+        "sample_id",
+        "int32",
+        False,
+        "manual feature",
+        "16",
+        False,
+        "Numeric sample identifier.",
+    ),
+    schema_entry(
+        "figure_id", "int32", False, "manual feature", "16", False, "Figure identifier."
+    ),
+    schema_entry(
+        "configuration",
+        "string",
+        False,
+        "CONFIGURATIONS key",
+        "non_degenerate / degenerate",
+        False,
+        "TLS frequency configuration.",
+    ),
+    schema_entry(
+        "omega_tls_1_GHz",
+        "float32",
+        False,
+        "omega_tls_1",
+        "4.0 GHz",
+        False,
+        "TLS 1 transition frequency.",
+    ),
+    schema_entry(
+        "omega_tls_2_GHz",
+        "float32",
+        False,
+        "omega_tls_2",
+        "4.0 or 4.12 GHz",
+        False,
+        "TLS 2 transition frequency.",
+    ),
+    schema_entry(
+        "j_coupling_GHz",
+        "float32",
+        False,
+        "J_COUPLING_GHZ",
+        "0.01 GHz",
+        False,
+        "TLS-TLS coupling strength.",
+    ),
+    schema_entry(
+        "drive_amplitude_GHz",
+        "float32",
+        False,
+        "DRIVE_AMPLITUDE_GHZ",
+        "0.10 GHz",
+        False,
+        "Drive amplitude.",
+    ),
+    schema_entry(
+        "pulse_duration_ns",
+        "float32",
+        False,
+        "PULSE_DURATION_NS",
+        "100 ns",
+        False,
+        "Drive pulse duration.",
+    ),
+    schema_entry(
+        "total_time_ns",
+        "float32",
+        False,
+        "TOTAL_TIME_NS",
+        "800 ns",
+        False,
+        "Total simulation time.",
+    ),
+    schema_entry(
+        "time_step_ns",
+        "float32",
+        False,
+        "DT_NS",
+        "0.01 ns",
+        False,
+        "Simulation time step.",
+    ),
+    schema_entry(
+        "gamma_collective_ns_inv",
+        "float32",
+        False,
+        "gamma_collective",
+        "0.002 ns^-1",
+        False,
+        "Collective decay rate.",
+    ),
+    schema_entry(
+        "gamma_local_1_ns_inv",
+        "float32",
+        False,
+        "gamma_local_1",
+        "0.0001 ns^-1",
+        False,
+        "Local decay rate of TLS 1.",
+    ),
+    schema_entry(
+        "gamma_local_2_ns_inv",
+        "float32",
+        False,
+        "gamma_local_2",
+        "0.0005 ns^-1",
+        False,
+        "Local decay rate of TLS 2.",
+    ),
+    schema_entry(
+        "drive_frequency_GHz",
+        "float32",
+        False,
+        "omega_d_vals",
+        "3.0 to 5.0 GHz",
+        False,
+        "Swept drive frequency.",
+    ),
 ]
 
 TIME_COLUMN_INFO = COMMON_COLUMN_INFO + [
-    schema_entry("time_ns", "float32", False, "tlist", "0 to 800 ns", False, "Simulation time."),
-    schema_entry("collective_population", "float32", False, "pop_t", ">= 0", True, "Collective excitation expectation value."),
-    schema_entry("phase_difference_rad", "float32", False, "phase", "-pi to pi", True, "Wrapped phase difference arg<sigma1+> - arg<sigma2+>."),
+    schema_entry(
+        "time_ns", "float32", False, "tlist", "0 to 800 ns", False, "Simulation time."
+    ),
+    schema_entry(
+        "collective_population",
+        "float32",
+        False,
+        "pop_t",
+        ">= 0",
+        True,
+        "Collective excitation expectation value.",
+    ),
+    schema_entry(
+        "phase_difference_rad",
+        "float32",
+        False,
+        "phase",
+        "-pi to pi",
+        True,
+        "Wrapped phase difference arg<sigma1+> - arg<sigma2+>.",
+    ),
 ]
 
 FFT_COLUMN_INFO = COMMON_COLUMN_INFO + [
-    schema_entry("fft_window_start_ns", "float32", False, "FFT_WINDOW_START_NS", "0 ns", False, "FFT window start time."),
-    schema_entry("fft_window_stop_ns", "float32", False, "FFT_WINDOW_STOP_NS", "300 ns", False, "FFT window stop time."),
-    schema_entry("fft_frequency_MHz", "float32", False, "fft_freq_plot_MHz", "0 to 150 MHz", False, "Positive FFT frequency axis."),
-    schema_entry("normalized_phase_fft", "float32", False, "fft_row", "0 to 1", False, "Normalized FFT magnitude of phase difference."),
+    schema_entry(
+        "fft_window_start_ns",
+        "float32",
+        False,
+        "FFT_WINDOW_START_NS",
+        "0 ns",
+        False,
+        "FFT window start time.",
+    ),
+    schema_entry(
+        "fft_window_stop_ns",
+        "float32",
+        False,
+        "FFT_WINDOW_STOP_NS",
+        "300 ns",
+        False,
+        "FFT window stop time.",
+    ),
+    schema_entry(
+        "fft_frequency_MHz",
+        "float32",
+        False,
+        "fft_freq_plot_MHz",
+        "0 to 150 MHz",
+        False,
+        "Positive FFT frequency axis.",
+    ),
+    schema_entry(
+        "normalized_phase_fft",
+        "float32",
+        False,
+        "fft_row",
+        "0 to 1",
+        False,
+        "Normalized FFT magnitude of phase difference.",
+    ),
 ]
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # HELPERS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 def save_json(obj, path):
     with open(path, "w") as f:
@@ -157,7 +314,7 @@ def save_json(obj, path):
 
 def save_pickle(df, path):
     df.to_pickle(path)
-    size_mb = os.path.getsize(path) / (1024 ** 2)
+    size_mb = os.path.getsize(path) / (1024**2)
     print(f"Saved: {path} ({size_mb:.2f} MB)")
 
 
@@ -229,51 +386,73 @@ def build_time_df(config_name, omega_1, omega_2, pop_mat, phase_mat):
     n_drive, n_time = pop_mat.shape
     n_rows = n_drive * n_time
 
-    return pd.DataFrame({
-        "sample_id": np.full(n_rows, SAMPLE_ID, dtype=np.int32),
-        "figure_id": np.full(n_rows, FIGURE_ID, dtype=np.int32),
-        "configuration": np.full(n_rows, config_name, dtype=object),
-        "omega_tls_1_GHz": np.full(n_rows, omega_1, dtype=np.float32),
-        "omega_tls_2_GHz": np.full(n_rows, omega_2, dtype=np.float32),
-        "j_coupling_GHz": np.full(n_rows, J_COUPLING_GHZ, dtype=np.float32),
-        "drive_amplitude_GHz": np.full(n_rows, DRIVE_AMPLITUDE_GHZ, dtype=np.float32),
-        "pulse_duration_ns": np.full(n_rows, PULSE_DURATION_NS, dtype=np.float32),
-        "total_time_ns": np.full(n_rows, TOTAL_TIME_NS, dtype=np.float32),
-        "time_step_ns": np.full(n_rows, DT_NS, dtype=np.float32),
-        "gamma_collective_ns_inv": np.full(n_rows, GAMMA_COLLECTIVE_NS_INV, dtype=np.float32),
-        "gamma_local_1_ns_inv": np.full(n_rows, GAMMA_LOCAL_1_NS_INV, dtype=np.float32),
-        "gamma_local_2_ns_inv": np.full(n_rows, GAMMA_LOCAL_2_NS_INV, dtype=np.float32),
-        "drive_frequency_GHz": np.repeat(DRIVE_FREQ_GHZ, n_time).astype(np.float32),
-        "time_ns": np.tile(TLIST_NS, n_drive).astype(np.float32),
-        "collective_population": pop_mat.reshape(-1).astype(np.float32),
-        "phase_difference_rad": phase_mat.reshape(-1).astype(np.float32),
-    })
+    return pd.DataFrame(
+        {
+            "sample_id": np.full(n_rows, SAMPLE_ID, dtype=np.int32),
+            "figure_id": np.full(n_rows, FIGURE_ID, dtype=np.int32),
+            "configuration": np.full(n_rows, config_name, dtype=object),
+            "omega_tls_1_GHz": np.full(n_rows, omega_1, dtype=np.float32),
+            "omega_tls_2_GHz": np.full(n_rows, omega_2, dtype=np.float32),
+            "j_coupling_GHz": np.full(n_rows, J_COUPLING_GHZ, dtype=np.float32),
+            "drive_amplitude_GHz": np.full(
+                n_rows, DRIVE_AMPLITUDE_GHZ, dtype=np.float32
+            ),
+            "pulse_duration_ns": np.full(n_rows, PULSE_DURATION_NS, dtype=np.float32),
+            "total_time_ns": np.full(n_rows, TOTAL_TIME_NS, dtype=np.float32),
+            "time_step_ns": np.full(n_rows, DT_NS, dtype=np.float32),
+            "gamma_collective_ns_inv": np.full(
+                n_rows, GAMMA_COLLECTIVE_NS_INV, dtype=np.float32
+            ),
+            "gamma_local_1_ns_inv": np.full(
+                n_rows, GAMMA_LOCAL_1_NS_INV, dtype=np.float32
+            ),
+            "gamma_local_2_ns_inv": np.full(
+                n_rows, GAMMA_LOCAL_2_NS_INV, dtype=np.float32
+            ),
+            "drive_frequency_GHz": np.repeat(DRIVE_FREQ_GHZ, n_time).astype(np.float32),
+            "time_ns": np.tile(TLIST_NS, n_drive).astype(np.float32),
+            "collective_population": pop_mat.reshape(-1).astype(np.float32),
+            "phase_difference_rad": phase_mat.reshape(-1).astype(np.float32),
+        }
+    )
 
 
 def build_fft_df(config_name, omega_1, omega_2, fft_mat):
     n_drive, n_fft = fft_mat.shape
     n_rows = n_drive * n_fft
 
-    return pd.DataFrame({
-        "sample_id": np.full(n_rows, SAMPLE_ID, dtype=np.int32),
-        "figure_id": np.full(n_rows, FIGURE_ID, dtype=np.int32),
-        "configuration": np.full(n_rows, config_name, dtype=object),
-        "omega_tls_1_GHz": np.full(n_rows, omega_1, dtype=np.float32),
-        "omega_tls_2_GHz": np.full(n_rows, omega_2, dtype=np.float32),
-        "j_coupling_GHz": np.full(n_rows, J_COUPLING_GHZ, dtype=np.float32),
-        "drive_amplitude_GHz": np.full(n_rows, DRIVE_AMPLITUDE_GHZ, dtype=np.float32),
-        "pulse_duration_ns": np.full(n_rows, PULSE_DURATION_NS, dtype=np.float32),
-        "total_time_ns": np.full(n_rows, TOTAL_TIME_NS, dtype=np.float32),
-        "time_step_ns": np.full(n_rows, DT_NS, dtype=np.float32),
-        "gamma_collective_ns_inv": np.full(n_rows, GAMMA_COLLECTIVE_NS_INV, dtype=np.float32),
-        "gamma_local_1_ns_inv": np.full(n_rows, GAMMA_LOCAL_1_NS_INV, dtype=np.float32),
-        "gamma_local_2_ns_inv": np.full(n_rows, GAMMA_LOCAL_2_NS_INV, dtype=np.float32),
-        "drive_frequency_GHz": np.repeat(DRIVE_FREQ_GHZ, n_fft).astype(np.float32),
-        "fft_window_start_ns": np.full(n_rows, FFT_WINDOW_START_NS, dtype=np.float32),
-        "fft_window_stop_ns": np.full(n_rows, FFT_WINDOW_STOP_NS, dtype=np.float32),
-        "fft_frequency_MHz": np.tile(FFT_FREQ_MHZ, n_drive).astype(np.float32),
-        "normalized_phase_fft": fft_mat.reshape(-1).astype(np.float32),
-    })
+    return pd.DataFrame(
+        {
+            "sample_id": np.full(n_rows, SAMPLE_ID, dtype=np.int32),
+            "figure_id": np.full(n_rows, FIGURE_ID, dtype=np.int32),
+            "configuration": np.full(n_rows, config_name, dtype=object),
+            "omega_tls_1_GHz": np.full(n_rows, omega_1, dtype=np.float32),
+            "omega_tls_2_GHz": np.full(n_rows, omega_2, dtype=np.float32),
+            "j_coupling_GHz": np.full(n_rows, J_COUPLING_GHZ, dtype=np.float32),
+            "drive_amplitude_GHz": np.full(
+                n_rows, DRIVE_AMPLITUDE_GHZ, dtype=np.float32
+            ),
+            "pulse_duration_ns": np.full(n_rows, PULSE_DURATION_NS, dtype=np.float32),
+            "total_time_ns": np.full(n_rows, TOTAL_TIME_NS, dtype=np.float32),
+            "time_step_ns": np.full(n_rows, DT_NS, dtype=np.float32),
+            "gamma_collective_ns_inv": np.full(
+                n_rows, GAMMA_COLLECTIVE_NS_INV, dtype=np.float32
+            ),
+            "gamma_local_1_ns_inv": np.full(
+                n_rows, GAMMA_LOCAL_1_NS_INV, dtype=np.float32
+            ),
+            "gamma_local_2_ns_inv": np.full(
+                n_rows, GAMMA_LOCAL_2_NS_INV, dtype=np.float32
+            ),
+            "drive_frequency_GHz": np.repeat(DRIVE_FREQ_GHZ, n_fft).astype(np.float32),
+            "fft_window_start_ns": np.full(
+                n_rows, FFT_WINDOW_START_NS, dtype=np.float32
+            ),
+            "fft_window_stop_ns": np.full(n_rows, FFT_WINDOW_STOP_NS, dtype=np.float32),
+            "fft_frequency_MHz": np.tile(FFT_FREQ_MHZ, n_drive).astype(np.float32),
+            "normalized_phase_fft": fft_mat.reshape(-1).astype(np.float32),
+        }
+    )
 
 
 def build_dataset(output_dir):
@@ -300,13 +479,17 @@ def build_dataset(output_dir):
         with ProcessPoolExecutor(max_workers=MAX_WORKERS) as pool:
             futures = {pool.submit(simulate_two_tls, job): job[1] for job in jobs}
 
-            for fut in tqdm(as_completed(futures), total=len(futures), desc=config_name):
+            for fut in tqdm(
+                as_completed(futures), total=len(futures), desc=config_name
+            ):
                 _, idx, pop_t, phase_t, fft_row = fut.result()
                 pop_mat[idx, :] = pop_t
                 phase_mat[idx, :] = phase_t
                 fft_mat[idx, :] = fft_row
 
-        time_blocks.append(build_time_df(config_name, omega_1, omega_2, pop_mat, phase_mat))
+        time_blocks.append(
+            build_time_df(config_name, omega_1, omega_2, pop_mat, phase_mat)
+        )
         fft_blocks.append(build_fft_df(config_name, omega_1, omega_2, fft_mat))
 
     time_df = pd.concat(time_blocks, ignore_index=True)
@@ -315,8 +498,13 @@ def build_dataset(output_dir):
     save_pickle(time_df, os.path.join(output_dir, "figure16_time_domain.pkl"))
     save_pickle(fft_df, os.path.join(output_dir, "figure16_phase_fft.pkl"))
 
-    save_json(TIME_COLUMN_INFO, os.path.join(output_dir, "figure16_time_domain_column_info.json"))
-    save_json(FFT_COLUMN_INFO, os.path.join(output_dir, "figure16_phase_fft_column_info.json"))
+    save_json(
+        TIME_COLUMN_INFO,
+        os.path.join(output_dir, "figure16_time_domain_column_info.json"),
+    )
+    save_json(
+        FFT_COLUMN_INFO, os.path.join(output_dir, "figure16_phase_fft_column_info.json")
+    )
 
     metadata = {
         "figure": 16,
