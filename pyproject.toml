@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dataset_creation_scripts"
+version = "0.1.0"
+description = "Data Wrangling Setup BCTDS/TLS spectroscopy results"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>2",
+    "scipy",
+    "pandas",
+    "matplotlib",
+    "qutip",
+    "tqdm",
+    "flake8",
+    "black",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
