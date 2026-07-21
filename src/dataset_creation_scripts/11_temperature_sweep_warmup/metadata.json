@@ -1,0 +1,110 @@
+{
+  "experiment_id": "experiment_11",
+  "title": "Temperature Dependence of BCTDS During Warm-Up",
+  "data_type": "raw",
+  "description": "Raw BCTDS homodyne I/Q measurements of single-pulse broadband spectroscopy on a sapphire sample coated with Shipley 1813 photoresist, swept 3000-5000 MHz and repeated back-to-back during a standard Bluefors warm-up. Each sweep takes about 9 minutes and the fridge climbs from ~0.14 K to ~250 K over the run, so the sweep index doubles as a temperature axis. Sharp ring-downs and collapse-and-revival patterns near base temperature wash out as the sample warms. Both stage temperatures are measured once per frequency point and are included as columns. Only the in-phase (I) and quadrature (Q) signals are measured; magnitude, phase, FFT spectra and fitted lifetimes are computable from them and are not stored.",
+  "samples": [
+    {
+      "sample_id": 0,
+      "name": "FM_Shipley",
+      "material": "Sapphire substrate with spin-coated Shipley 1813 photoresist"
+    }
+  ],
+  "apparatus": {
+    "refrigerator": "Bluefors LD400 dilution refrigerator",
+    "temperature": "swept by warming from base to ~250 K; measured, not set",
+    "waveguide": "WR-229 rectangular waveguide, 3-6 GHz passband, TE10 mode",
+    "detection": "homodyne (in-phase I, quadrature Q)",
+    "electronics": "RFSoC",
+    "calibration": "HFSS-calibrated drive amplitude, flat across the band ('HFSS_calib' in the run ID)."
+  },
+  "clocks": {
+    "awg_clock_MHz": 9830.4,
+    "adc_readout_clock_MHz": 552.96
+  },
+  "timing": {
+    "pulse_duration": {
+      "hardware_unit": "AWG clock ticks",
+      "clock_MHz": 9830.4,
+      "formula": "pulse_width_ns = ticks / 9830.4 * 1000",
+      "fixed_ticks": 308,
+      "resulting_ns": 31.331380208333336
+    },
+    "time_axis": {
+      "hardware_unit": "ADC samples",
+      "clock_MHz": 552.96,
+      "one_sample_ns": 1.808449074074074,
+      "formula": "timestamp_ns = sample_index / 552.96 * 1000",
+      "n_samples": 1000,
+      "resulting_range_ns": [
+        0.0,
+        1806.6406249999998
+      ]
+    },
+    "sweep_duration": "about 9 minutes per rep (401 frequency points)"
+  },
+  "pulse_geometry": {
+    "frame": "raw-trace samples/ns, the same frame as timestamp_ns",
+    "num_pulses": 1,
+    "envelope_samples": [
+      103,
+      121
+    ],
+    "envelope_ns": [
+      186.3,
+      218.8
+    ],
+    "source": "Measured from the data (threshold at 30% of peak magnitude), rep 0. generate_fig_11.py declares no pulse position. Threshold-based edges overestimate the extent slightly; the implied width (~32 ns) is consistent with the 308-tick / 31.33 ns pulse in the filename. This is a single-pulse experiment: there is no inter-pulse spacing."
+  },
+  "sweep": {
+    "sample": {
+      "n": 1,
+      "values": [
+        "FM_Shipley"
+      ]
+    },
+    "rep": {
+      "n": 106,
+      "range": [
+        0,
+        105
+      ],
+      "note": "The primary variable. Sweeps are back-to-back during a warm-up, so rep index is monotonic in both time and temperature."
+    },
+    "drive_frequency": {
+      "n": 401,
+      "unit": "MHz",
+      "range": [
+        3000,
+        5000
+      ],
+      "step": 5,
+      "source": "pulse_freq_array, stored in each .npz",
+      "note": "The 3 GHz and 5 GHz sweep limits correspond to k_B T = h f temperatures of 144 mK and 240 mK."
+    },
+    "time_samples_per_trace": 1000
+  },
+  "constant_drive_parameters": {
+    "pulse_width_ns": 31.331380208333336,
+    "pulse_width_ticks": 308,
+    "num_pulses": 1,
+    "pulse_shape": "square",
+    "pulse_amplitude_au": null,
+    "amplitude_note": "The drive amplitude is not stated for this figure and is absent from the filenames and the .npz contents. It is HFSS-calibrated to be flat across the band."
+  },
+  "thermometry": {
+    "T_mxc_K": "Mixing-chamber plate temperature, kelvin, one reading per frequency point.",
+    "T_still_K": "Still-stage temperature, kelvin, one reading per frequency point.",
+    "sample_vs_plate": "The actual sample temperature is expected to be LOWER than the plate reading, because of the relatively low thermal conductivity between the baseplate and the insulating sapphire samples. T_mxc_K is the plate, not the sample.",
+    "nan_policy": "T_mxc_K contains 9,221 NaN values: the mixing-chamber thermometer stops reading as the fridge warms, and the first all-NaN sweep is rep 84. I and Q are never NaN. NaN here means 'not measured', not 'bad data'."
+  },
+  "processed_companion": {
+    "directory": "processed_result_npz/",
+    "note": "The source folder contains a second directory of DERIVED results, and generate_fig_11.py reads that one rather than the raw sweeps packaged here. It holds, per rep: mag_log_matrix (401, 910), tau_us_array (401,), xc_array, average_transmission, phase_TP_fft_matrix (2001, 276), V_fit_avg_phase_TP_fft_matricies, and interpolated axes. Those are derived quantities \u2014 tau, for instance, is a scipy curve_fit output, not a measured value \u2014 so none of them are in this dataset, which packages the raw sweeps only. Everything there is computable from the raw I/Q here."
+  },
+  "acquisition": {
+    "run_id": "FM_Shipley_cont_HFSS_calib_20251008_174837",
+    "run_start_utc": "2025-10-08T17:48:39",
+    "elapsed_s_note": "elapsed_s is wall-clock seconds since run_start_utc (the first timestamp of rep 0), taken from the time_stamp_list array inside each .npz, one entry per frequency point. The full run spans about 17.1 hours; reps 0-50 span about 7.7 hours. Stored as elapsed seconds rather than an absolute epoch because float32 cannot represent Unix timestamps to better than ~128 s; elapsed integer seconds up to 16.7 M are exact."
+  }
+}

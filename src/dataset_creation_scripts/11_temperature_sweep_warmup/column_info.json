@@ -1,0 +1,112 @@
+{
+  "dataset": "experiment_11_temperature_sweep_warmup",
+  "format": "long (one row per time sample)",
+  "n_rows": 42506000,
+  "n_columns": 8,
+  "schema_rule": "The filename holds the sample, the pulse width and the sweep index; the array axes hold the drive frequency (axis 1) and time (axis 2) together with the measured I/Q. Unlike every other experiment in this series, the thermometry is also measured per frequency point and stored in the file, so T_mxc_K and T_still_K are per-row measurements rather than metadata.",
+  "columns": [
+    {
+      "name": "rep_index",
+      "dtype": "float32",
+      "unit": "index",
+      "role": "coordinate (primary variable)",
+      "measured": false,
+      "varies_within_file": false,
+      "computed_from": "filename field 'rep_N'",
+      "range": [
+        0,
+        105
+      ],
+      "n_unique": 106,
+      "description": "Which back-to-back sweep this row belongs to. The primary variable of Experiment 11: because the sweeps run continuously during a warm-up, rep index is monotonic in both wall-clock time and temperature."
+    },
+    {
+      "name": "frequency_MHz",
+      "dtype": "float32",
+      "unit": "MHz",
+      "role": "coordinate (swept axis)",
+      "measured": false,
+      "varies_within_file": true,
+      "computed_from": "pulse_freq_array, stored in each .npz; axis 1",
+      "range": [
+        3000,
+        5000
+      ],
+      "n_unique": 401,
+      "description": "Drive frequency: 401 values from 3000 to 5000 MHz in 5 MHz steps. Each frequency gets its own single-pulse ring-down trace. Not in the filename, because frequency is the swept axis."
+    },
+    {
+      "name": "T_mxc_K",
+      "dtype": "float32",
+      "unit": "K",
+      "role": "measured observable (thermometry)",
+      "measured": true,
+      "varies_within_file": true,
+      "computed_from": "T_mxc, stored in each .npz; one value per frequency point",
+      "may_be_nan": true,
+      "description": "Mixing-chamber plate temperature in KELVIN (not millikelvin), measured once per frequency point. Averaging it over a rep gives that sweep's temperature (rep 0 -> 0.1416 K, rep 45 -> 88.2431 K). CONTAINS NaN: the thermometer stops reading as the fridge warms (9,221,000 rows, in reps 83-105). NaN means 'not measured'. The actual sample is expected to be colder than this plate reading."
+    },
+    {
+      "name": "T_still_K",
+      "dtype": "float32",
+      "unit": "K",
+      "role": "measured observable (thermometry)",
+      "measured": true,
+      "varies_within_file": true,
+      "computed_from": "T_still, stored in each .npz; one value per frequency point",
+      "may_be_nan": true,
+      "description": "Still-stage temperature in KELVIN, measured once per frequency point. Continues to read at high temperature where T_mxc_K drops out."
+    },
+    {
+      "name": "timestamp_ns",
+      "dtype": "float32",
+      "unit": "ns",
+      "role": "coordinate (time axis)",
+      "measured": false,
+      "varies_within_file": true,
+      "computed_from": "sample_index / 552.96 * 1000; axis 2",
+      "range": [
+        0.0,
+        1806.6406249999998
+      ],
+      "n_unique": 1000,
+      "description": "Time within the recorded trace \u2014 the fast axis, on which the ring-down physics lives. Not to be confused with elapsed_s, which is the slow wall-clock axis of the warm-up."
+    },
+    {
+      "name": "elapsed_s",
+      "dtype": "float32",
+      "unit": "s",
+      "role": "acquisition metadata",
+      "measured": false,
+      "varies_within_file": true,
+      "computed_from": "time_stamp_list in each .npz, minus the run start",
+      "description": "Wall-clock seconds since the warm-up started, recorded once per frequency point. The slow axis: the full run spans ~17.1 h and reps 0-50 span ~7.7 h. Pairs with T_mxc_K to track the fridge temperature against wall-clock time."
+    },
+    {
+      "name": "I",
+      "dtype": "float32",
+      "unit": "ADC arbitrary units",
+      "role": "measured observable (raw)",
+      "measured": true,
+      "varies_within_file": true,
+      "computed_from": "IQ_avg_matrix[0], loaded directly from the .npz",
+      "description": "Raw in-phase homodyne signal, averaged over shots. Never NaN."
+    },
+    {
+      "name": "Q",
+      "dtype": "float32",
+      "unit": "ADC arbitrary units",
+      "role": "measured observable (raw)",
+      "measured": true,
+      "varies_within_file": true,
+      "computed_from": "IQ_avg_matrix[1], loaded directly from the .npz",
+      "description": "Raw quadrature homodyne signal, averaged over shots. Never NaN. Combined with I to compute magnitude and phase."
+    }
+  ],
+  "computable_not_stored": {
+    "magnitude": "sqrt(I^2 + Q^2)  ==  abs(I + 1j*Q)",
+    "phase": "atan2(Q, I)  ==  angle(I + 1j*Q)",
+    "log_amplitude_spectrum": "log10(abs(I + 1j*Q) + 0.01)",
+    "tau_us": "fitted ring-down lifetime \u2014 an exponential curve_fit over the post-pulse window, per frequency. It lives in the processed_result_npz companion directory, not here."
+  }
+}

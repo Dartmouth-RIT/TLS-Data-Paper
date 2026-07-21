@@ -1,3 +1,23 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Generated dataset outputs  (project-specific — keep these)
+# ─────────────────────────────────────────────────────────────────────────────
+# The dataset creation scripts rebuild these from the raw files on demand, and
+# they are far too large for git (experiment 11 alone is a 1.6 GB pickle and a
+# 2.9 GB CSV; all seven together are ~8.5 GB). GitHub rejects any single file
+# over 100 MB. The scripts are the deliverable here — the outputs are not.
+*.pkl
+*.pkl.gz
+*.csv
+*.npz
+
+# Raw measurement files. These live in the manuscript codebase, not here; this
+# repo holds only the code that reads them.
+*.npy
+
+# NOTE: metadata.json and column_info.json are deliberately NOT ignored. They
+# are small, they are the human- and machine-readable data dictionary, and they
+# are regenerated on every run so they cannot drift from the code.
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -182,9 +202,9 @@ cython_debug/
 .abstra/
 
 # Visual Studio Code
-#  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
+#  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore
 #  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-#  and can be added to the global gitignore or merged into this file. However, if you prefer, 
+#  and can be added to the global gitignore or merged into this file. However, if you prefer,
 #  you could uncomment the following to ignore the entire vscode folder
 # .vscode/
 

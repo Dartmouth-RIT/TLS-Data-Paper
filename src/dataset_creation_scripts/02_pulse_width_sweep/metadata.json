@@ -1,0 +1,164 @@
+{
+  "experiment_id": "experiment_2",
+  "title": "Pulse-Width Sweep",
+  "data_type": "raw",
+  "description": "Raw BCTDS homodyne I/Q measurements of two-level-system (TLS) defect ensembles in a silicon native-oxide sample, recorded while sweeping the duration of a single square microwave drive pulse across 500 drive frequencies. Only the in-phase (I) and quadrature (Q) signals are measured; magnitude, phase, and FFT spectra are computable from them and are not stored.",
+  "sample": {
+    "name": "Si_111_native_oxide",
+    "material": "Silicon (111), native SiOx surface layer",
+    "supplier": "WaferPro",
+    "defect_host": "surface native oxide layer",
+    "note": "A single chip was used, so the dataset has no sample_id column."
+  },
+  "apparatus": {
+    "refrigerator": "Bluefors LD400 dilution refrigerator",
+    "temperature": "< 10 mK",
+    "waveguide": "WR-229 rectangular waveguide, 3-6 GHz passband, TE10 mode",
+    "detection": "homodyne (in-phase I, quadrature Q)",
+    "electronics": "RFSoC"
+  },
+  "clocks": {
+    "awg_clock_MHz": 9830.4,
+    "adc_readout_clock_MHz": 552.96
+  },
+  "timing": {
+    "note": "The instrument specifies and records time in integer hardware clock cycles. These are converted to nanoseconds using the relevant clock rate. Pulse duration and the time axis use two independent clock domains.",
+    "pulse_duration": {
+      "hardware_unit": "AWG clock ticks",
+      "clock_MHz": 9830.4,
+      "one_tick_ns": 0.10172526041666667,
+      "formula": "pulse_width_ns = ticks / 9830.4 * 1000",
+      "swept_ticks": "50, 100, ..., 2100 (42 values, step 50)",
+      "resulting_range_ns": [
+        5.086,
+        213.623
+      ]
+    },
+    "time_axis": {
+      "hardware_unit": "ADC samples",
+      "clock_MHz": 552.96,
+      "one_sample_ns": 1.808449074074074,
+      "formula": "timestamp_ns = sample_index / 552.96 * 1000",
+      "n_samples": 1000,
+      "resulting_range_ns": [
+        0.0,
+        1806.6406249999998
+      ]
+    }
+  },
+  "sweep": {
+    "pulse_width": {
+      "n": 42,
+      "unit": "ns",
+      "range": [
+        5.086,
+        213.623
+      ],
+      "ticks": [
+        50,
+        100,
+        150,
+        200,
+        250,
+        300,
+        350,
+        400,
+        450,
+        500,
+        550,
+        600,
+        650,
+        700,
+        750,
+        800,
+        850,
+        900,
+        950,
+        1000,
+        1050,
+        1100,
+        1150,
+        1200,
+        1250,
+        1300,
+        1350,
+        1400,
+        1450,
+        1500,
+        1550,
+        1600,
+        1650,
+        1700,
+        1750,
+        1800,
+        1850,
+        1900,
+        1950,
+        2000,
+        2050,
+        2100
+      ],
+      "values_ns": [
+        5.0863,
+        10.1725,
+        15.2588,
+        20.3451,
+        25.4313,
+        30.5176,
+        35.6038,
+        40.6901,
+        45.7764,
+        50.8626,
+        55.9489,
+        61.0352,
+        66.1214,
+        71.2077,
+        76.2939,
+        81.3802,
+        86.4665,
+        91.5527,
+        96.639,
+        101.7253,
+        106.8115,
+        111.8978,
+        116.984,
+        122.0703,
+        127.1566,
+        132.2428,
+        137.3291,
+        142.4154,
+        147.5016,
+        152.5879,
+        157.6742,
+        162.7604,
+        167.8467,
+        172.9329,
+        178.0192,
+        183.1055,
+        188.1917,
+        193.278,
+        198.3643,
+        203.4505,
+        208.5368,
+        213.623
+      ]
+    },
+    "drive_frequency": {
+      "n": 500,
+      "unit": "MHz",
+      "range": [
+        4100,
+        4599
+      ],
+      "step_MHz": 1
+    },
+    "time_samples_per_trace": 1000
+  },
+  "constant_drive_parameters": {
+    "drive_amplitude_au": 30000,
+    "num_pulses": 1,
+    "pulse_shape": "square",
+    "amplitude_note": "The drive amplitude is recorded nowhere in the raw files \u2014 neither in the filenames nor in the arrays."
+  },
+  "filtering_caveat": "pulse_width_ns is a converted value (ticks / 9830.4 * 1000) and lands on numbers a computer cannot store exactly, so `df.pulse_width_ns == 30.5176` may silently match nothing. Use np.isclose() instead. The 42 exact values are listed under sweep.pulse_width.values_ns. frequency_MHz is whole numbers, so == is safe there."
+}
