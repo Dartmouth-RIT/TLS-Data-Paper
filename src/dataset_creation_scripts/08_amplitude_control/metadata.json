@@ -1,0 +1,91 @@
+{
+  "schema_title": "Experiment 8 - Data Feature / Metadata Schema",
+  "provenance_line": "Fitzpatrick Lab, Dartmouth College | Numerical N=4 TLS: amplitude and multi-pulse (two-pulse) control",
+  "experiment_id": "experiment_8",
+  "data_type": "simulation",
+  "what_it_shows": "Amplitude and multi-pulse control of a 4-TLS ensemble. a: ring-down map (single pulse); b: amplitude sweep at the optimal drive frequency (collapse-and-revival); c: two-pulse protocol (A2 swept, A1 fixed, gap 100 ns).",
+  "physical_system": {
+    "system": "N = 4 coupled TLS, Lindblad master equation",
+    "seed": 2072025,
+    "TLS_frequencies_GHz_resolved": [
+      3.4869,
+      3.1661,
+      4.0966,
+      4.1896
+    ],
+    "TLS_frequencies_note": "uniform[3.0, 5.0] GHz, seed 2072025; the resulting w_i/2pi = 3.49, 3.17, 4.10, 4.19 GHz.",
+    "coupling_type": "XX (alpha_x=1, alpha_y=0, alpha_z=0)",
+    "coupling_J_range_GHz": [
+      -0.05,
+      0.05
+    ],
+    "coupling_J_matrix_GHz": [
+      [
+        0.0,
+        0.039080081217348614,
+        -0.020340509565881505,
+        0.03532076341959896
+      ],
+      [
+        0.039080081217348614,
+        0.0,
+        0.04776100957441469,
+        -0.03534022525722849
+      ],
+      [
+        -0.020340509565881505,
+        0.04776100957441469,
+        0.0,
+        -0.0218122003405988
+      ],
+      [
+        0.03532076341959896,
+        -0.03534022525722849,
+        -0.0218122003405988,
+        0.0
+      ]
+    ],
+    "gamma_collective": 0.002,
+    "gamma_dephasing": 0.0
+  },
+  "drive_and_pulse": {
+    "drive_frequency_sweep_GHz": [
+      3.0,
+      5.0
+    ],
+    "n_drive_frequencies": 400,
+    "freq_star_GHz": 4.14787,
+    "freq_star_rule": "argmax over the panel-a drive-frequency sweep of the population summed over the post-pulse tail (t > pulse1_ns).",
+    "amp_base": 0.1,
+    "amp_sweep_range": [
+      0.0,
+      0.1
+    ],
+    "n_amp": 60,
+    "amp1_fixed_panel_c": 0.1,
+    "pulse1_ns": 200,
+    "gap_ns": 100,
+    "pulse2_ns": 200
+  },
+  "time_grid": {
+    "t_min_ns": 0.0,
+    "t_max_ns": 1600,
+    "n_samples": 1000,
+    "one_sample_ns": 1.6016016016016017
+  },
+  "output": {
+    "observable": "<sigma+ sigma-> collective excitation (dimensionless)",
+    "panels": [
+      "ring_down_map",
+      "amp_sweep",
+      "two_pulse_sweep"
+    ]
+  },
+  "provenance": {
+    "physics_module": "hamiltonian_generator.py (QuTiP-5 API shim only)",
+    "attribution": "Uses code and simulation methods from the Fitzpatrick Lab, Dartmouth College.",
+    "panel_c_note": "Panel c sweeps A2 (second pulse) with A1 fixed.",
+    "no_new_physics": true,
+    "smoke_test": false
+  }
+}

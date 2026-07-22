@@ -93,7 +93,7 @@ invariant rather than rejecting NaN outright. Filter with `np.isnan()` as needed
 106 raw `.npz` files, named
 `308_rep_{N}_ID_FM_Shipley_cont_HFSS_calib_20251008_174837_with_T.npz`, each
 containing `IQ_avg_matrix (2, 401, 1000)`, `pulse_freq_array (401,)`,
-`time_stamp_list (401,)`, `T_still (401,)`, `T_mxc (401,)`. The source folder
+`time_stamp_list (401,)`, `T_still (401,)`, `T_mxc (401,)`. The raw data folder
 also has a `processed_result_npz/` directory of **derived** results (fits, FFTs);
 that is *not* packaged here — this dataset ships the raw sweeps only.
 

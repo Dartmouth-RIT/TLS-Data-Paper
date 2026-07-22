@@ -58,7 +58,7 @@
       104.9
     ],
     "identical_across_cooldowns": true,
-    "source": "Measured from the data (threshold at 30% of peak magnitude), NOT declared in generate_fig_13.py. Threshold-based edges overestimate the extent slightly. This is a single-pulse experiment: there is no inter-pulse spacing or phase sweep."
+    "source": "Measured from the data (threshold at 30% of peak magnitude), NOT declared in the acquisition definition. Threshold-based edges overestimate the extent slightly. This is a single-pulse experiment: there is no inter-pulse spacing or phase sweep."
   },
   "sweep": {
     "sample": {
@@ -82,7 +82,7 @@
         4999
       ],
       "step": 1,
-      "source": "generate_fig_13.py: np.arange(2000, 5000, 1)"
+      "source": "the acquisition definition: np.arange(2000, 5000, 1)"
     },
     "time_samples_per_trace": 1000
   },
@@ -90,6 +90,6 @@
     "num_pulses": 1,
     "pulse_shape": "square",
     "pulse_width_ns": null,
-    "pulse_width_note": "NOT RECORDED. Neither the filename nor generate_fig_13.py states the pulse duration, so this dataset has no pulse_width_ns column. The measured envelope (~65 -> ~105 ns) is wider than the 31.33 ns (308-tick) pulse used in experiments 3, 4, 5, 11 and 12, so that value is not assumed here."
+    "pulse_width_note": "NOT RECORDED. Neither the filename nor the acquisition definition states the pulse duration, so this dataset has no pulse_width_ns column. The measured envelope (~65 -> ~105 ns) is wider than the 31.33 ns (308-tick) pulse used in experiments 3, 4, 5, 11 and 12, so that value is not assumed here."
   }
 }

@@ -1,0 +1,109 @@
+{
+  "experiment_id": "experiment_9",
+  "title": "Separation & Relative-Phase Coherent Control (N=2 TLS simulation)",
+  "data_type": "simulation",
+  "description": "Numerical BCTDS ring-down of N=2 coupled two-level systems evolved under a Lindblad master equation (QuTiP mesolve). A square microwave drive pulse excites the pair and its collective excitation <sigma+ sigma-> is followed as it rings down. Three panels: (0) a single-pulse ring-down map versus drive frequency, from which the longest-lived FREQ_STAR is selected; (1) a two-pulse gap sweep at FREQ_STAR with the second pulse in phase; (2) a two-pulse relative-phase sweep at FREQ_STAR with the gap held fixed. The population is the only observable; it is computed by the solver, not measured. The model is imported from the local hamiltonian_generator.py (QuTiP-5 API shim only).",
+  "model": {
+    "system": "2 coupled two-level systems (TLS)",
+    "equation_of_motion": "Lindblad master equation",
+    "solver": "QuTiP mesolve",
+    "observable": "<sigma+ sigma-> (collective excitation), dimensionless",
+    "unit_convention": "Frequencies used numerically as inverse nanoseconds (GHz == ns^-1) with NO factor of 2*pi inside the solver. Amplitudes are dimensionless; phase in radians; times in nanoseconds."
+  },
+  "hamiltonian": {
+    "n_tls": 2,
+    "seed": 42,
+    "tls_frequencies_GHz": [
+      3.0,
+      4.0
+    ],
+    "tls_frequencies_note": "Hard-coded to [3.0, 4.0] after a throwaway random draw; that draw is reproduced so the coupling is deterministic.",
+    "coupling_type": "XX (alpha_x=1, alpha_y=0, alpha_z=0)",
+    "coupling_J_range_GHz": [
+      -0.05,
+      0.05
+    ],
+    "coupling_J_matrix_GHz": [
+      [
+        0.0,
+        -0.03439813595575635
+      ],
+      [
+        -0.03439813595575635,
+        0.0
+      ]
+    ],
+    "gamma_collective": 0.002,
+    "gamma_dephasing": 0.0
+  },
+  "timing": {
+    "pulse1_ns": 200,
+    "pulse2_ns": 200,
+    "fixed_gap_ns_panel_2": 150,
+    "pulse_shape": "square with a 1 ns raised-cosine turn-on (T_ramp_ns=1)",
+    "time_grid": {
+      "t_min_ns": 0.0,
+      "t_max_ns": 1600,
+      "n_samples": 1000,
+      "one_sample_ns": 1.6016016016016017,
+      "formula": "timestamp_ns = linspace(0, 1600, 1000)"
+    }
+  },
+  "sweep": {
+    "panels": {
+      "n": 3,
+      "names": [
+        "ring_down_map",
+        "gap_sweep",
+        "phase_sweep"
+      ],
+      "note": "panel_id 0=ring-down map, 1=gap sweep, 2=phase sweep."
+    },
+    "drive_frequency": {
+      "panel": 0,
+      "n": 400,
+      "unit": "GHz",
+      "range": [
+        2.0,
+        5.0
+      ],
+      "note": "Swept in panel 0; FREQ_STAR in panels 1,2."
+    },
+    "gap": {
+      "panel": 1,
+      "n": 120,
+      "unit": "ns",
+      "range": [
+        0.0,
+        800.0
+      ],
+      "fixed_value_panel_2": 150,
+      "note": "Inter-pulse gap; swept in panel 1, fixed in panel 2."
+    },
+    "phase2": {
+      "panel": 2,
+      "n": 120,
+      "unit": "rad",
+      "range": [
+        0.0,
+        6.283185307179586
+      ],
+      "note": "Relative phase of pulse 2; swept in panel 2, else 0."
+    },
+    "amplitude": {
+      "value": 0.12,
+      "note": "Both pulses; not swept."
+    },
+    "time_samples_per_trace": 1000
+  },
+  "freq_star": {
+    "value_GHz": 3.067669,
+    "rule": "argmax over the panel-0 drive-frequency sweep of the population summed over the post-pulse tail (timestamp_ns > pulse1_ns). Recomputed here, not hard-coded."
+  },
+  "provenance": {
+    "physics_module": "hamiltonian_generator.py (QuTiP-5 API shim only)",
+    "attribution": "Uses code and simulation methods from the Fitzpatrick Lab, Dartmouth College.",
+    "no_new_physics": true,
+    "smoke_test": false
+  }
+}
