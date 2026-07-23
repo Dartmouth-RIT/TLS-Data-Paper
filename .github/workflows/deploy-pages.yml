@@ -1,0 +1,54 @@
+name: Deploy QTLS website to GitHub Pages
+
+# Rebuilds the site from the experiment READMEs and publishes it to GitHub Pages
+# on every push to the default branch that touches the website or a README.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "website/**"
+      - "src/dataset_creation_scripts/**/README.md"
+      - ".github/workflows/deploy-pages.yml"
+  workflow_dispatch:        # allow manual runs from the Actions tab
+
+# Permissions the Pages deployment needs
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one Pages deploy at a time; a newer run supersedes an in-progress one
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build index.html from the experiment READMEs
+        run: python website/build_site.py
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: website          # the folder that contains index.html
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
