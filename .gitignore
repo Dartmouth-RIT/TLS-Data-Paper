@@ -238,3 +238,9 @@ archive/
 plots/
 runs/
 data/
+
+# Built website. Regenerated from the experiment READMEs by website/build_site.py
+# (and by the GitHub Actions Pages workflow on every deploy), so the built file is
+# never committed — this keeps the live site always in sync with the current
+# READMEs. Rebuild locally with `python website/build_site.py` to preview.
+website/index.html
