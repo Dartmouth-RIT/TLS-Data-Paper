@@ -117,9 +117,9 @@ and contains:
     pulse_phase_array  (121,)  int64    the phase axis, IN THE FILE
     time_stamp_list    (121,)  datetime64[s]   wall clock per phase point
 
-Unlike Figures 3 and 4, the swept axis is stored in the file rather than being
-implied by the plotting code, so this script reads pulse_phase_array directly
-and validates it instead of hard-coding np.arange(0, 361, 3).
+Unlike Experiments 3 and 4, the swept axis is stored in the file rather than
+being implied by the sweep definition, so this script reads pulse_phase_array
+directly and validates it instead of hard-coding np.arange(0, 361, 3).
 
 Note that filenames express spacing in MICROSECONDS (0.01) while this dataset
 stores NANOSECONDS (10), so that the values are exactly representable in
@@ -186,7 +186,7 @@ SAMPLE_MATERIAL = {
 # single chip and a single frequency; the gap between pulses is the variable.
 DRIVE_FREQUENCY_MHZ = 3400
 
-# generate_fig_5.py: exp_ID = "Shipley_phase_8mK_20251012_132853"
+# exp_ID = "Shipley_phase_8mK_20251012_132853"
 EXP_ID = "Shipley_phase_8mK_20251012_132853"
 TEMPERATURE_MK = 8
 

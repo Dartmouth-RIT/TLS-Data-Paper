@@ -131,7 +131,7 @@ import numpy as np
 from tqdm import tqdm
 
 # ─────────────────────────────────────────────────────────────────────────────
-# RECORDING ORDER — taken directly from generate_fig_12.py
+# RECORDING ORDER — taken directly from the acquisition definition
 # ─────────────────────────────────────────────────────────────────────────────
 
 SAMPLES = [("Shipley", 0)]
@@ -179,7 +179,7 @@ PULSE_WIDTH_NS = (PULSE_WIDTH_TICKS / AWG_CLOCK_MHZ) * 1000  # ~= 31.33 ns
 # it is built once and reused.
 TIMESTAMPS_NS = (np.arange(N_TIME_SAMPLES) / ADC_CLOCK_MHZ) * 1000
 
-# Drive amplitudes are not stated for this figure and are absent from the files.
+# Drive amplitudes are not stated for this experiment and are absent from the files.
 PULSE1_AMPLITUDE_AU = None
 PULSE2_AMPLITUDE_AU = None
 
@@ -223,7 +223,7 @@ def npz_filename(freq_mhz: int, spacing_ns: int, exp_id: str) -> str:
 
 
 def temperature_subdir(temperature_mk: int) -> str:
-    """generate_fig_12.py: f'npz_data_base_{temperature}mK'"""
+    """Folder naming: f'npz_data_base_{temperature}mK'"""
     return f"npz_data_base_{temperature_mk}mK"
 
 
@@ -405,10 +405,10 @@ def build_column_info() -> dict:
                 "filename's exp_ID",
                 "values": [t for t, _ in TEMPERATURE_RUNS],
                 "n_unique": len(TEMPERATURE_RUNS),
-                "description": "Fridge set point — the primary variable of Figure "
-                "12. This is a SET POINT, not a measured temperature: these files "
-                "carry no thermometry arrays (experiment 11's do). Each temperature "
-                "is a separate run, thermalised >1 hour beforehand.",
+                "description": "Fridge set point — the primary variable of this "
+                "experiment. This is a SET POINT, not a measured temperature: these "
+                "files carry no thermometry arrays (experiment 11's do). Each "
+                "temperature is a separate run, thermalised >1 hour beforehand.",
             },
             {
                 "name": "frequency_MHz",

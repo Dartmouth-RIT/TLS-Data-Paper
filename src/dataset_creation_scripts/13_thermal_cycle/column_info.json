@@ -3,7 +3,7 @@
   "format": "long (one row per time sample)",
   "n_rows": 6000000,
   "n_columns": 5,
-  "schema_rule": "The filename holds the sample and the cooldown; the array axes hold the drive frequency (axis 1) and time (axis 2) together with the measured I/Q. Unlike the other experiments, the frequency axis is not stored in the file \u2014 it comes from generate_fig_13.py.",
+  "schema_rule": "The filename holds the sample and the cooldown; the array axes hold the drive frequency (axis 1) and time (axis 2) together with the measured I/Q. Unlike the other experiments, the frequency axis is not stored in the file \u2014 it comes from the acquisition definition.",
   "columns": [
     {
       "name": "cooldown_index",
@@ -27,7 +27,7 @@
       "role": "coordinate (primary swept input)",
       "measured": false,
       "varies_within_file": true,
-      "computed_from": "generate_fig_13.py: np.arange(2000, 5000, 1); axis 1",
+      "computed_from": "the acquisition definition: np.arange(2000, 5000, 1); axis 1",
       "range": [
         2000,
         4999

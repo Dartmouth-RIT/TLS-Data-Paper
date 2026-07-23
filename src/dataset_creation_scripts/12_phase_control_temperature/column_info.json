@@ -23,7 +23,7 @@
         750
       ],
       "n_unique": 7,
-      "description": "Fridge set point \u2014 the primary variable of Figure 12. This is a SET POINT, not a measured temperature: these files carry no thermometry arrays (experiment 11's do). Each temperature is a separate run, thermalised >1 hour beforehand."
+      "description": "Fridge set point \u2014 the primary variable of this experiment. This is a SET POINT, not a measured temperature: these files carry no thermometry arrays (experiment 11's do). Each temperature is a separate run, thermalised >1 hour beforehand."
     },
     {
       "name": "frequency_MHz",

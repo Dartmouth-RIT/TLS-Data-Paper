@@ -1,0 +1,102 @@
+{
+  "dataset": "experiment_10_sharpening_physics",
+  "format": "three long-format tables (see 'tables')",
+  "note": "Uncoupled N=2 TLS (source quirk reproduced). See metadata.json.",
+  "tables": {
+    "postpulse_map": {
+      "format": "long (one row per pulse x drive frequency)",
+      "n_rows": 20000,
+      "columns": [
+        {
+          "name": "pulse_duration_ns",
+          "dtype": "float32",
+          "unit": "ns",
+          "role": "coordinate",
+          "description": "Drive pulse duration (20-200 ns, 50 values)."
+        },
+        {
+          "name": "drive_frequency_GHz",
+          "dtype": "float32",
+          "unit": "GHz (== ns^-1)",
+          "role": "coordinate",
+          "description": "Drive frequency (3.0-5.0 GHz, 400 values)."
+        },
+        {
+          "name": "postpulse_population",
+          "dtype": "float32",
+          "unit": "dimensionless",
+          "role": "observable",
+          "description": "<sigma+ sigma-> sampled at the first time sample after the pulse ends (first t > pulse_duration_ns)."
+        }
+      ]
+    },
+    "population_traces": {
+      "format": "long (one row per representative pulse x freq x time)",
+      "n_rows": 1200000,
+      "columns": [
+        {
+          "name": "pulse_duration_ns",
+          "dtype": "float32",
+          "unit": "ns",
+          "role": "coordinate",
+          "description": "One of the three representative pulses (shortest, middle, longest)."
+        },
+        {
+          "name": "drive_frequency_GHz",
+          "dtype": "float32",
+          "unit": "GHz",
+          "role": "coordinate",
+          "description": "Drive frequency (3.0-5.0 GHz, 400 values)."
+        },
+        {
+          "name": "timestamp_ns",
+          "dtype": "float32",
+          "unit": "ns",
+          "role": "coordinate (time axis)",
+          "description": "Simulation time (0-1000 ns, 1000 samples)."
+        },
+        {
+          "name": "population",
+          "dtype": "float32",
+          "unit": "dimensionless",
+          "role": "observable",
+          "description": "Full <sigma+ sigma-> time trace."
+        }
+      ]
+    },
+    "phaseV_fft": {
+      "format": "long (one row per representative pulse x freq x fft bin)",
+      "n_rows": 73200,
+      "columns": [
+        {
+          "name": "pulse_duration_ns",
+          "dtype": "float32",
+          "unit": "ns",
+          "role": "coordinate",
+          "description": "Representative pulse."
+        },
+        {
+          "name": "drive_frequency_GHz",
+          "dtype": "float32",
+          "unit": "GHz",
+          "role": "coordinate",
+          "description": "Drive frequency (3.0-5.0 GHz, 400 values)."
+        },
+        {
+          "name": "fft_frequency_MHz",
+          "dtype": "float32",
+          "unit": "MHz",
+          "role": "coordinate (FFT axis)",
+          "description": "Positive FFT frequency of phi(t), 0-150 MHz."
+        },
+        {
+          "name": "normalized_phase_fft",
+          "dtype": "float32",
+          "unit": "dimensionless (0-1)",
+          "role": "observable",
+          "description": "Row-wise normalized |FFT[phi(t)]| over the 0-400 ns window, where phi = arg<sigma+_1> - arg<sigma+_2>. Normalized to peak 1 per drive frequency."
+        }
+      ]
+    }
+  }
+}

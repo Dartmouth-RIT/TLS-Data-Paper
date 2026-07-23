@@ -84,7 +84,7 @@ and contains:
 
 THIS PACKAGES THE RAW SWEEPS, NOT THE DERIVED COMPANION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-The source folder has two directories:
+The raw data folder has two directories:
 
     npz_data_base_with_T/   raw IQ + thermometry   <-- THIS DATASET
     processed_result_npz/   derived fits and FFTs
@@ -150,7 +150,7 @@ SAMPLE_MATERIAL = {
     "FM_Shipley": "Sapphire substrate with spin-coated Shipley 1813 photoresist"
 }
 
-# generate_fig_11.py: exp_ID = "FM_Shipley_cont_HFSS_calib_20251008_174837"
+# exp_ID = "FM_Shipley_cont_HFSS_calib_20251008_174837"
 EXP_ID = "FM_Shipley_cont_HFSS_calib_20251008_174837"
 
 # Each "rep" is one complete 3-5 GHz sweep, taking ~9 minutes. 106 of them run
@@ -290,7 +290,8 @@ def build_metadata(reps: list, run_start_iso: str = None) -> dict:
             "envelope_ns": PULSE_ENVELOPE_NS,
             "source": (
                 "Measured from the data (threshold at 30% of peak magnitude), rep "
-                "0. generate_fig_11.py declares no pulse position. Threshold-based "
+                "0. The acquisition definition declares no pulse position. "
+                "Threshold-based "
                 "edges overestimate the extent slightly; the implied width (~32 ns) "
                 "is consistent with the 308-tick / 31.33 ns pulse in the filename. "
                 "This is a single-pulse experiment: there is no inter-pulse spacing."
@@ -321,9 +322,9 @@ def build_metadata(reps: list, run_start_iso: str = None) -> dict:
             "num_pulses": 1,
             "pulse_shape": "square",
             "pulse_amplitude_au": None,
-            "amplitude_note": "The drive amplitude is not stated for this figure "
-            "and is absent from the filenames and the .npz contents. It is "
-            "HFSS-calibrated to be flat across the band.",
+            "amplitude_note": "The drive amplitude is not stated for this "
+            "experiment and is absent from the filenames and the .npz contents. It "
+            "is HFSS-calibrated to be flat across the band.",
         },
         "thermometry": {
             "T_mxc_K": "Mixing-chamber plate temperature, kelvin, one reading per "
@@ -346,9 +347,9 @@ def build_metadata(reps: list, run_start_iso: str = None) -> dict:
         "processed_companion": {
             "directory": "processed_result_npz/",
             "note": (
-                "The source folder contains a second directory of DERIVED results, "
-                "and generate_fig_11.py reads that one rather than the raw sweeps "
-                "packaged here. It holds, per rep: mag_log_matrix (401, 910), "
+                "The raw data folder contains a second directory of DERIVED "
+                "results, read by the downstream analysis rather than the raw "
+                "sweeps packaged here. It holds, per rep: mag_log_matrix (401, 910), "
                 "tau_us_array (401,), xc_array, average_transmission, "
                 "phase_TP_fft_matrix (2001, 276), V_fit_avg_phase_TP_fft_matricies, "
                 "and interpolated axes. Those are derived quantities — tau, for "

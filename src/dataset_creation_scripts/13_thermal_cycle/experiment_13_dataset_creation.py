@@ -93,7 +93,7 @@ Timestamp spacing: 1 / 552.96 MHz ~ 1.8084 ns per sample
 
 RECORDING ORDER
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Files are loaded in the order defined by generate_fig_13.py:
+Files are loaded in the order defined by the acquisition definition:
 
     cooldown_index (1 = "shipley", 2 = "shipley_2nd")
       -> frequency_MHz (2000, 2001, ..., 4999  -- 3000 values, axis 1 of the .npy)
@@ -110,12 +110,12 @@ and has shape (2, 3000, 1000):
 
 These filenames are far less informative than the other experiments' — they
 carry only the sample and the cooldown. The frequency axis comes from
-generate_fig_13.py; the temperature is not recorded in the raw files at all.
+the acquisition definition; the temperature is not recorded in the raw files at all.
 
 PULSE WIDTH IS NOT RECORDED
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Unlike every other experiment in this series, neither the filename nor
-generate_fig_13.py states the pulse duration, so this dataset has NO
+the acquisition definition states the pulse duration, so this dataset has NO
 pulse_width_ns column. The pulse envelope measured from the data spans raw
 samples 36 -> 58 (65.1 -> 104.9 ns), which is wider than the 308-tick /
 31.33 ns pulse used elsewhere; the 308-tick value is therefore NOT assumed
@@ -158,7 +158,7 @@ import numpy as np
 from tqdm import tqdm
 
 # ─────────────────────────────────────────────────────────────────────────────
-# RECORDING ORDER — taken directly from generate_fig_13.py
+# RECORDING ORDER — taken directly from the acquisition definition
 # ─────────────────────────────────────────────────────────────────────────────
 
 SAMPLES = [("Shipley", 0)]
@@ -282,7 +282,7 @@ def build_metadata() -> dict:
             "identical_across_cooldowns": True,
             "source": (
                 "Measured from the data (threshold at 30% of peak magnitude), NOT "
-                "declared in generate_fig_13.py. Threshold-based edges overestimate "
+                "declared in the acquisition definition. Threshold-based edges overestimate "
                 "the extent slightly. This is a single-pulse experiment: there is "
                 "no inter-pulse spacing or phase sweep."
             ),
@@ -295,7 +295,7 @@ def build_metadata() -> dict:
                 "unit": "MHz",
                 "range": [int(FREQUENCY_LIST_MHZ[0]), int(FREQUENCY_LIST_MHZ[-1])],
                 "step": FREQ_STEP_MHZ,
-                "source": "generate_fig_13.py: np.arange(2000, 5000, 1)",
+                "source": "the acquisition definition: np.arange(2000, 5000, 1)",
             },
             "time_samples_per_trace": N_TIME_SAMPLES,
         },
@@ -304,7 +304,7 @@ def build_metadata() -> dict:
             "pulse_shape": "square",
             "pulse_width_ns": None,
             "pulse_width_note": (
-                "NOT RECORDED. Neither the filename nor generate_fig_13.py states "
+                "NOT RECORDED. Neither the filename nor the acquisition definition states "
                 "the pulse duration, so this dataset has no pulse_width_ns column. "
                 "The measured envelope (~65 -> ~105 ns) is wider than the 31.33 ns "
                 "(308-tick) pulse used in experiments 3, 4, 5, 11 and 12, so that "
@@ -324,7 +324,7 @@ def build_column_info() -> dict:
             "The filename holds the sample and the cooldown; the array axes hold "
             "the drive frequency (axis 1) and time (axis 2) together with the "
             "measured I/Q. Unlike the other experiments, the frequency axis is not "
-            "stored in the file — it comes from generate_fig_13.py."
+            "stored in the file — it comes from the acquisition definition."
         ),
         "columns": [
             {
@@ -349,7 +349,7 @@ def build_column_info() -> dict:
                 "role": "coordinate (primary swept input)",
                 "measured": False,
                 "varies_within_file": True,
-                "computed_from": "generate_fig_13.py: np.arange(2000, 5000, 1); axis 1",
+                "computed_from": "the acquisition definition: np.arange(2000, 5000, 1); axis 1",
                 "range": [int(FREQUENCY_LIST_MHZ[0]), int(FREQUENCY_LIST_MHZ[-1])],
                 "n_unique": N_FREQUENCIES,
                 "description": "Drive frequency, the primary swept variable: 3000 "

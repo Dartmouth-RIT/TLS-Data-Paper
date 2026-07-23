@@ -1,0 +1,100 @@
+{
+  "experiment_id": "experiment_10",
+  "title": "Ring-down & Phase Sharpening vs Pulse Duration (N=2 TLS simulation)",
+  "data_type": "simulation",
+  "description": "Numerical BCTDS study of how the ring-down and the inter-TLS phase relationship sharpen with drive-pulse duration, for two TLS at 4.0 and 4.1 GHz under a Lindblad master equation (QuTiP mesolve). One drive-frequency sweep is repeated over a grid of pulse durations, yielding three products: a post-pulse population map, full population traces for three representative pulses, and the normalized FFT of the inter-TLS phase difference (the 'phase V'). Observables are computed by the solver, not measured. The model is imported from the local hamiltonian_generator.py (QuTiP-5 API shim only).",
+  "model": {
+    "system": "2 two-level systems (TLS) at [4.0, 4.1] GHz",
+    "equation_of_motion": "Lindblad master equation",
+    "solver": "QuTiP mesolve",
+    "coupling_note": "An XX coupling (J=0.05) is built but the solver replaces it with sum(interactions[i,j] for i in range(N) for j in range(i)), which for N=2 equals EXACTLY 0. The TLS therefore evolve INDEPENDENTLY (uncoupled). This is reproduced deliberately and unchanged; it is almost certainly an unintended quirk of the original implementation. Do NOT treat this dataset as a coupled system.",
+    "observables": {
+      "population": "<sigma+ sigma-> collective excitation (dimensionless)",
+      "phase_difference": "phi(t) = arg<sigma+_1> - arg<sigma+_2>, wrapped to (-pi, pi]"
+    },
+    "drive": "square pulse, amp*cos(freq*t) for t <= pulse_ns (no ramp), per the active drive definition",
+    "unit_convention": "Frequencies used numerically as inverse nanoseconds (GHz == ns^-1) with NO factor of 2*pi. Amplitude dimensionless; phase in radians; time in ns; FFT axis in MHz."
+  },
+  "constants": {
+    "n_tls": 2,
+    "tls_frequencies_GHz": [
+      4.0,
+      4.1
+    ],
+    "nominal_coupling_J_GHz": 0.05,
+    "gamma_collective": 0.002,
+    "gamma_dephasing": 0.0,
+    "drive_amplitude": 0.1
+  },
+  "grids": {
+    "pulse_durations_ns": {
+      "n": 50,
+      "min": 20.0,
+      "max": 200.0,
+      "formula": "linspace(20, 200, 50)"
+    },
+    "representative_pulses_ns": [
+      20.0,
+      111.8367,
+      200.0
+    ],
+    "drive_frequency_GHz": {
+      "n": 400,
+      "range": [
+        3.0,
+        5.0
+      ],
+      "formula": "linspace(3.0, 5.0, 400)"
+    },
+    "time_grid": {
+      "t_min_ns": 0.0,
+      "t_max_ns": 1000,
+      "n_samples": 1000,
+      "one_sample_ns": 1.001001001001001
+    },
+    "phaseV": {
+      "window_ns": [
+        0.0,
+        400.0
+      ],
+      "fft_view_MHz": 150.0,
+      "n_fft_bins": 61,
+      "normalization": "row-wise (per drive frequency) to peak = 1"
+    }
+  },
+  "tables": {
+    "postpulse_map": {
+      "columns": [
+        "pulse_duration_ns",
+        "drive_frequency_GHz",
+        "postpulse_population"
+      ],
+      "n_rows": 20000
+    },
+    "population_traces": {
+      "columns": [
+        "pulse_duration_ns",
+        "drive_frequency_GHz",
+        "timestamp_ns",
+        "population"
+      ],
+      "n_rows": 1200000
+    },
+    "phaseV_fft": {
+      "columns": [
+        "pulse_duration_ns",
+        "drive_frequency_GHz",
+        "fft_frequency_MHz",
+        "normalized_phase_fft"
+      ],
+      "n_rows": 73200
+    }
+  },
+  "provenance": {
+    "physics_module": "hamiltonian_generator.py (QuTiP-5 API shim only)",
+    "attribution": "Uses code and simulation methods from the Fitzpatrick Lab, Dartmouth College.",
+    "no_new_physics": true,
+    "reproduces_uncoupled_quirk": true,
+    "smoke_test": false
+  }
+}
