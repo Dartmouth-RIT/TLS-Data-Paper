@@ -1,0 +1,164 @@
+{
+  "schema_title": "Experiment 8 - Data Feature / Metadata Schema",
+  "provenance_line": "Fitzpatrick Lab, Dartmouth College | Numerical N=4 TLS: amplitude and multi-pulse (two-pulse) control",
+  "colour_legend": {
+    "green": "Physical metadata / simulation INPUT feature (set in the script)",
+    "blue": "Numerical / solver setting (grid, step, window)",
+    "orange": "Computed OUTPUT array (population, phase, FFT)"
+  },
+  "sections": [
+    {
+      "section": "OVERVIEW",
+      "rows": [
+        {
+          "column_or_knob": "what_it_shows",
+          "data_type": "Text",
+          "can_have_nulls": "-",
+          "maps_to_code_variable": "experiment_8_dataset_creation.py",
+          "value_or_range": "Amplitude and multi-pulse control of a 4-TLS ensemble",
+          "in_a_stored_data_file": "No",
+          "derivation_or_notes": "a: ring-down map (single pulse); b: amplitude sweep at the optimal drive frequency (collapse-and-revival); c: two-pulse protocol (A2 swept, A1 fixed, gap 100 ns).",
+          "colour": "green"
+        }
+      ]
+    },
+    {
+      "section": "PHYSICAL SYSTEM METADATA - the simulated TLS ensemble",
+      "rows": [
+        {
+          "column_or_knob": "system",
+          "data_type": "String",
+          "can_have_nulls": "No",
+          "maps_to_code_variable": "N_TLS",
+          "value_or_range": "N = 4 coupled TLS, Lindblad master equation",
+          "in_a_stored_data_file": "No",
+          "derivation_or_notes": "Ensemble size.",
+          "colour": "green"
+        },
+        {
+          "column_or_knob": "TLS_frequencies",
+          "data_type": "Float",
+          "can_have_nulls": "No",
+          "maps_to_code_variable": "init_freqs",
+          "value_or_range": "uniform[3.0, 5.0] GHz, seed 2072025 -> {3.49, 3.17, 4.10, 4.19} GHz",
+          "in_a_stored_data_file": "No",
+          "derivation_or_notes": "Bare frequencies drawn with a fixed seed; the resulting w_i/2pi = 3.49, 3.17, 4.10, 4.19 GHz.",
+          "colour": "green"
+        },
+        {
+          "column_or_knob": "coupling_J",
+          "data_type": "Float",
+          "can_have_nulls": "No",
+          "maps_to_code_variable": "build_spin_spin_interactions_random_distribution",
+          "value_or_range": "J/2pi in [-50, 50] MHz (code uniform(-0.05, 0.05)), XX only",
+          "in_a_stored_data_file": "No",
+          "derivation_or_notes": "Random symmetric dipole-dipole couplings between every pair.",
+          "colour": "green"
+        },
+        {
+          "column_or_knob": "dissipation_gamma",
+          "data_type": "Float",
+          "can_have_nulls": "No",
+          "maps_to_code_variable": "GAMMA, GAMMA_PHI",
+          "value_or_range": "Gamma/2pi = 2.0 MHz (code 0.002); gamma_phi = 0",
+          "in_a_stored_data_file": "No",
+          "derivation_or_notes": "Collective relaxation rate.",
+          "colour": "green"
+        }
+      ]
+    },
+    {
+      "section": "DRIVE & PULSE PARAMETERS",
+      "rows": [
+        {
+          "column_or_knob": "drive_frequency",
+          "data_type": "Float",
+          "can_have_nulls": "No",
+          "maps_to_code_variable": "FREQ_AXIS / FREQ_STAR",
+          "value_or_range": "3.0-5.0 GHz, 400 pts (panel a); optimal wd/2pi = 4.15 GHz (panels b,c)",
+          "in_a_stored_data_file": "No",
+          "derivation_or_notes": "Swept in the ring-down map; fixed at the ring-down-maximizing freq for b,c.",
+          "colour": "green"
+        },
+        {
+          "column_or_knob": "drive_amplitude",
+          "data_type": "Float",
+          "can_have_nulls": "No",
+          "maps_to_code_variable": "AMP_BASE / AMP_SWEEP / AMP2_SWEEP",
+          "value_or_range": "A1/2pi = 100 MHz base (code 0.10); sweeps 0 -> 0.10 in 60 steps",
+          "in_a_stored_data_file": "No",
+          "derivation_or_notes": "Fixed for the ring-down map; swept 0->0.10 for the amplitude panels (pulse-1 in b, pulse-2 in c).",
+          "colour": "green"
+        },
+        {
+          "column_or_knob": "pulse_timing",
+          "data_type": "Float",
+          "can_have_nulls": "No",
+          "maps_to_code_variable": "PULSE_RING / PULSE1_NS / GAP_NS / PULSE2_NS",
+          "value_or_range": "single pulse: 200 ns; two-pulse: 200 ns / gap 100 ns / 200 ns",
+          "in_a_stored_data_file": "No",
+          "derivation_or_notes": "tau = 200 ns; two-pulse protocol with inter-pulse gap tau_g = 100 ns.",
+          "colour": "green"
+        }
+      ]
+    },
+    {
+      "section": "TIME GRID",
+      "rows": [
+        {
+          "column_or_knob": "time_grid",
+          "data_type": "Float",
+          "can_have_nulls": "No",
+          "maps_to_code_variable": "T_MAX_NS, N_T",
+          "value_or_range": "0 to 1600 ns, 1000 points",
+          "in_a_stored_data_file": "No",
+          "derivation_or_notes": "Simulation time axis.",
+          "colour": "blue"
+        }
+      ]
+    },
+    {
+      "section": "COMPUTED OUTPUT ARRAY",
+      "rows": [
+        {
+          "column_or_knob": "population",
+          "data_type": "Float",
+          "can_have_nulls": "No",
+          "maps_to_code_variable": "pop maps",
+          "value_or_range": "<sigma+ sigma-> vs (freq,time), (amp,time), (amp2,time)",
+          "in_a_stored_data_file": "No",
+          "derivation_or_notes": "Collective excitation; ring-down, amplitude sweep, two-pulse sweep.",
+          "colour": "orange"
+        }
+      ]
+    }
+  ],
+  "actual_stored_columns": {
+    "note": "The schema above (in_a_stored_data_file = No) describes the original plotting workflow, which stored nothing. THIS dataset persists the features as a long-format table; below is how each pkl/csv row is laid out.",
+    "format": "long (one row per time sample)",
+    "n_rows": 520000,
+    "n_columns": 9,
+    "columns": [
+      "panel_id",
+      "drive_frequency_GHz",
+      "amp1",
+      "amp2",
+      "pulse1_ns",
+      "gap_ns",
+      "pulse2_ns",
+      "timestamp_ns",
+      "population"
+    ],
+    "column_notes": {
+      "panel_id": "0 ring-down map, 1 amplitude sweep, 2 two-pulse sweep",
+      "drive_frequency_GHz": "swept in panel 0; FREQ_STAR in 1,2 (green)",
+      "amp1": "pulse-1 amplitude; swept in panel 1; fixed 0.10 else (green)",
+      "amp2": "pulse-2 amplitude; swept in panel 2 (A1 fixed); 0 else (green)",
+      "pulse1_ns": "200 ns constant (green)",
+      "gap_ns": "100 ns in panel 2; 0 else (green)",
+      "pulse2_ns": "200 ns in panel 2; 0 else (green)",
+      "timestamp_ns": "0-1600 ns, 1000 samples (blue)",
+      "population": "<sigma+ sigma-> output (orange)"
+    }
+  }
+}

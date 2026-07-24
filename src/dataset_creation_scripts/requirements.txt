@@ -1,0 +1,17 @@
+# Install with:   pip install -r requirements.txt
+#
+# Every third-party package imported anywhere under dataset_creation_scripts/ is
+# listed here (the rest — os, json, pickle, argparse, glob, gc, re, concurrent,
+# multiprocessing — are part of the Python standard library).
+#
+# numpy / pandas / tqdm : used by ALL experiment scripts.
+# scipy                 : used by the simulation experiments (6, 7, 14, 16) for FFTs.
+# qutip                 : used ONLY by the simulation experiments
+#
+# Version floors are conservative; newer releases are expected to work.
+
+numpy>=1.24
+pandas>=1.5
+scipy>=1.10
+tqdm>=4.60
+qutip>=5.0

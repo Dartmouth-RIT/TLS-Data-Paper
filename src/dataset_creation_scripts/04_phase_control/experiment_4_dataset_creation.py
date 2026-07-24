@@ -725,7 +725,7 @@ def build_dataset(data_dir: str, output_dir: str, write_csv_file: bool = True):
         print(f"  [PASS] No NaN or Inf values in dataset")
 
     # Are the measured numbers the right size? What comes BACK from the chip is
-    # a few thousand a.u.; the 30000 figure elsewhere in this file is how hard
+    # a few thousand a.u.; the 30000 number elsewhere in this file is how hard
     # we SHOUT, not what we hear. Seeing 30000-sized numbers here would mean the
     # drive and the response had been confused somewhere.
     I_col = data_final[:, COL["I"]]

@@ -18,6 +18,13 @@
 # are small, they are the human- and machine-readable data dictionary, and they
 # are regenerated on every run so they cannot drift from the code.
 
+# Per-run reverification logs written by the dataset scripts (e.g. experiment_8
+# writes experiment_8/experiment_8_run.log; a manual `> run_full.log` redirect
+# produces run_full.log). These are build artifacts, not source. Also matched by
+# the generic *.log rule further down; listed here so the intent is explicit.
+*_run.log
+run_full.log
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

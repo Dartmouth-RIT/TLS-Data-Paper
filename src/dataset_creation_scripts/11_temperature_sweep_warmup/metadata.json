@@ -54,7 +54,7 @@
       186.3,
       218.8
     ],
-    "source": "Measured from the data (threshold at 30% of peak magnitude), rep 0. generate_fig_11.py declares no pulse position. Threshold-based edges overestimate the extent slightly; the implied width (~32 ns) is consistent with the 308-tick / 31.33 ns pulse in the filename. This is a single-pulse experiment: there is no inter-pulse spacing."
+    "source": "Measured from the data (threshold at 30% of peak magnitude), rep 0. The acquisition definition declares no pulse position. Threshold-based edges overestimate the extent slightly; the implied width (~32 ns) is consistent with the 308-tick / 31.33 ns pulse in the filename. This is a single-pulse experiment: there is no inter-pulse spacing."
   },
   "sweep": {
     "sample": {
@@ -90,7 +90,7 @@
     "num_pulses": 1,
     "pulse_shape": "square",
     "pulse_amplitude_au": null,
-    "amplitude_note": "The drive amplitude is not stated for this figure and is absent from the filenames and the .npz contents. It is HFSS-calibrated to be flat across the band."
+    "amplitude_note": "The drive amplitude is not stated for this experiment and is absent from the filenames and the .npz contents. It is HFSS-calibrated to be flat across the band."
   },
   "thermometry": {
     "T_mxc_K": "Mixing-chamber plate temperature, kelvin, one reading per frequency point.",
@@ -100,7 +100,7 @@
   },
   "processed_companion": {
     "directory": "processed_result_npz/",
-    "note": "The source folder contains a second directory of DERIVED results, and generate_fig_11.py reads that one rather than the raw sweeps packaged here. It holds, per rep: mag_log_matrix (401, 910), tau_us_array (401,), xc_array, average_transmission, phase_TP_fft_matrix (2001, 276), V_fit_avg_phase_TP_fft_matricies, and interpolated axes. Those are derived quantities \u2014 tau, for instance, is a scipy curve_fit output, not a measured value \u2014 so none of them are in this dataset, which packages the raw sweeps only. Everything there is computable from the raw I/Q here."
+    "note": "The raw data folder contains a second directory of DERIVED results, read by the downstream analysis rather than the raw sweeps packaged here. It holds, per rep: mag_log_matrix (401, 910), tau_us_array (401,), xc_array, average_transmission, phase_TP_fft_matrix (2001, 276), V_fit_avg_phase_TP_fft_matricies, and interpolated axes. Those are derived quantities \u2014 tau, for instance, is a scipy curve_fit output, not a measured value \u2014 so none of them are in this dataset, which packages the raw sweeps only. Everything there is computable from the raw I/Q here."
   },
   "acquisition": {
     "run_id": "FM_Shipley_cont_HFSS_calib_20251008_174837",

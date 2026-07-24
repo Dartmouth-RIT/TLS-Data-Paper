@@ -1,0 +1,123 @@
+{
+  "dataset": "experiment_9_separation_phase_sweep",
+  "format": "long (one row per time sample)",
+  "n_rows": 640000,
+  "n_columns": 10,
+  "schema_rule": "panel_id selects one of three simulated regimes; the swept knob for that panel and the fast time axis vary row-to-row, together with the single simulated observable (population). All scalar constants of the run live once in metadata.json, not repeated per row.",
+  "columns": [
+    {
+      "name": "panel_id",
+      "dtype": "float32",
+      "unit": "categorical (0/1/2)",
+      "role": "coordinate (regime selector)",
+      "measured": false,
+      "values": [
+        0,
+        1,
+        2
+      ],
+      "value_labels": {
+        "0": "ring_down_map",
+        "1": "gap_sweep",
+        "2": "phase_sweep"
+      },
+      "n_unique": 3,
+      "description": "0 ring-down map (single pulse, drive freq swept), 1 gap sweep (two pulses, phase2=0, gap swept, at FREQ_STAR), 2 phase sweep (two pulses, fixed gap, phase2 swept, at FREQ_STAR)."
+    },
+    {
+      "name": "drive_frequency_GHz",
+      "dtype": "float32",
+      "unit": "GHz (== ns^-1, no 2*pi)",
+      "role": "coordinate (swept input in panel 0)",
+      "measured": false,
+      "range": [
+        2.0,
+        5.0
+      ],
+      "n_unique_panel_0": 400,
+      "description": "Microwave drive frequency. Swept across 2.0-5.0 GHz in panel 0; held at FREQ_STAR in panels 1 and 2."
+    },
+    {
+      "name": "amp1",
+      "dtype": "float32",
+      "unit": "dimensionless drive amplitude",
+      "role": "coordinate (fixed)",
+      "measured": false,
+      "value": 0.12,
+      "description": "Amplitude of the first (or only) drive pulse. Constant at 0.12 throughout."
+    },
+    {
+      "name": "amp2",
+      "dtype": "float32",
+      "unit": "dimensionless drive amplitude",
+      "role": "coordinate",
+      "measured": false,
+      "description": "Amplitude of the second drive pulse (0.12 in panels 1,2; 0 in panel 0 where there is no second pulse)."
+    },
+    {
+      "name": "pulse1_ns",
+      "dtype": "float32",
+      "unit": "ns",
+      "role": "coordinate (pulse timing)",
+      "measured": false,
+      "description": "Duration of the first pulse. Constant (200 ns)."
+    },
+    {
+      "name": "gap_ns",
+      "dtype": "float32",
+      "unit": "ns",
+      "role": "coordinate (swept input in panel 1)",
+      "measured": false,
+      "range": [
+        0.0,
+        800.0
+      ],
+      "description": "Idle gap after pulse 1 before pulse 2. Swept 0-800 ns in panel 1; fixed at 150 ns in panel 2; 0 in panel 0 (single pulse)."
+    },
+    {
+      "name": "pulse2_ns",
+      "dtype": "float32",
+      "unit": "ns",
+      "role": "coordinate (pulse timing)",
+      "measured": false,
+      "description": "Duration of the second pulse (200 ns in panels 1,2; 0 in panel 0)."
+    },
+    {
+      "name": "phase2_rad",
+      "dtype": "float32",
+      "unit": "rad",
+      "role": "coordinate (swept input in panel 2)",
+      "measured": false,
+      "range": [
+        0.0,
+        6.283185307179586
+      ],
+      "description": "Relative phase of the second pulse. Swept 0-2*pi in panel 2; 0 elsewhere. Decides whether the second pulse's response adds to or cancels the ring-down of the first."
+    },
+    {
+      "name": "timestamp_ns",
+      "dtype": "float32",
+      "unit": "ns",
+      "role": "coordinate (time axis)",
+      "measured": false,
+      "range": [
+        0.0,
+        1600.0
+      ],
+      "n_unique": 1000,
+      "description": "Simulation time within the trace. Identical grid for every trace, so traces are directly comparable."
+    },
+    {
+      "name": "population",
+      "dtype": "float32",
+      "unit": "dimensionless",
+      "role": "simulated observable (output)",
+      "measured": false,
+      "computed_from": "QuTiP mesolve expectation of Sm.dag()*Sm",
+      "description": "Collective excitation <sigma+ sigma-> of the N=2 TLS pair, computed by the Lindblad solver. Non-negative. The sole output."
+    }
+  ],
+  "computable_not_stored": {
+    "note": "population is the only observable stored here."
+  }
+}
