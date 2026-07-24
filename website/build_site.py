@@ -107,8 +107,8 @@ TEMPLATE = r"""<!doctype html>
     --maxw:1180px;--radius:20px;--ease:cubic-bezier(.22,.61,.36,1);
   }
   *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;font-family:var(--f-body);color:var(--white);background:var(--bg-0);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  html{scroll-behavior:smooth;overflow-x:hidden}
+  body{margin:0;font-family:var(--f-body);color:var(--white);background:var(--bg-0);line-height:1.6;-webkit-font-smoothing:antialiased}
   .bg-grad{position:fixed;inset:0;z-index:-3;pointer-events:none;
     background:
       radial-gradient(1200px 800px at 78% -10%, rgba(118,87,255,.16), transparent 60%),
@@ -171,7 +171,7 @@ TEMPLATE = r"""<!doctype html>
   @keyframes spin3{from{transform:rotateX(74deg) rotateY(120deg)}to{transform:rotateX(74deg) rotateY(480deg)}}
   .core-glow{position:absolute;inset:-40%;background:radial-gradient(circle,rgba(0,217,255,.18),transparent 60%);filter:blur(20px);z-index:-1}
 
-  section{position:relative;padding:110px 0}
+  section{position:relative;padding:110px 0;scroll-margin-top:80px}
   .sec-head{max-width:660px;margin-bottom:52px}
   .sec-tag{font-family:var(--f-mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);display:flex;align-items:center;gap:10px;margin-bottom:16px}
   .sec-tag::before{content:"";width:26px;height:1px;background:linear-gradient(90deg,var(--cyan),transparent)}
@@ -366,7 +366,7 @@ TEMPLATE = r"""<!doctype html>
       <h2>Reproducible, top to bottom</h2>
       <p>Every dataset regenerates from a single deterministic script with a pinned physics module. The data files are rebuilt on demand; the code is the deliverable.</p>
     </div>
-    <div class="grid" style="grid-template-columns:1fr 1fr;gap:24px">
+    <div class="grid" style="grid-template-columns:1fr;gap:24px">
       <div class="reveal code"><span class="c-com"># build a simulated dataset (deterministic)</span>
 <span class="c-key">python</span> experiment_8_dataset_creation.py --workers 16
 
@@ -375,12 +375,6 @@ TEMPLATE = r"""<!doctype html>
 <span class="c-key">with</span> <span class="c-fn">open</span>(<span class="c-str">"experiment_8_dataset_long.pkl"</span>, <span class="c-str">"rb"</span>) <span class="c-key">as</span> fh:
     payload = pickle.<span class="c-fn">load</span>(fh)
 df = pd.<span class="c-fn">DataFrame</span>(payload[<span class="c-str">"data"</span>], columns=payload[<span class="c-str">"columns"</span>])</div>
-      <div class="reveal card" style="display:flex;flex-direction:column;justify-content:center;gap:20px">
-        <h3 style="font-family:var(--f-head);font-size:1.3rem;margin:0">Every run is verified</h3>
-        <p style="color:var(--soft);margin:0">Stored traces are checked against an independent recomputation from the same physics — a bit-for-bit match, re-run on every build via built-in sanity checks.</p>
-        <div style="display:flex;gap:10px;flex-wrap:wrap"><span class="badge sim">diff = 0</span><span class="badge">float32</span><span class="badge meas">seed-locked</span></div>
-        <a href="#experiments" class="btn btn-primary" style="align-self:flex-start">Browse experiments <span class="arrow">→</span></a>
-      </div>
     </div>
   </div>
 </section>
@@ -427,6 +421,22 @@ df = pd.<span class="c-fn">DataFrame</span>(payload[<span class="c-str">"data"</
 
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1,rootMargin:'0px 0px -8% 0px'});
   document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+
+  /* ---- smooth in-page scrolling. Uses window.scrollTo (not scrollIntoView) so
+          it scrolls the real viewport even when body is a scroll container, and
+          works inside sandboxed iframes where native #anchor nav is blocked. ---- */
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(ev){
+      var id=a.getAttribute('href');
+      if(id.length<2) return;
+      var t=document.querySelector(id);
+      if(!t) return;
+      ev.preventDefault();
+      var y=t.getBoundingClientRect().top+(window.pageYOffset||document.documentElement.scrollTop||document.body.scrollTop||0)-72;
+      window.scrollTo({top:y<0?0:y, behavior:reduce?'auto':'smooth'});
+      if(history.replaceState) history.replaceState(null,'',id);
+    });
+  });
 
   /* ---- markdown renderer ---- */
   function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
